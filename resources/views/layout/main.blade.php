@@ -41,37 +41,43 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="pages/forms/basic_elements.html">
+          <a class="nav-link" href="{{ url('peminjaman') }}">
             <i class="mdi mdi-file-restore menu-icon"></i>
             <span class="menu-title">Peminjaman Barang</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="pages/charts/chartjs.html">
-            <i class="mdi mdi-glassdoor menu-icon"></i>
-            <span class="menu-title">Status Peminjaman</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="pages/tables/basic-table.html">
+          <a class="nav-link" href="{{ url('pengembalian') }}">
             <i class="mdi mdi-grid-large menu-icon"></i>
             <span class="menu-title">Pengembalian Barang</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="pages/icons/mdi.html">
+          <a class="nav-link" href="{{ url('barangRusak') }}">
+            <i class="mdi mdi-folder-remove menu-icon"></i>
+            <span class="menu-title">Barang Rusak</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url('pemusnaan') }}">
+            <i class="mdi mdi-glassdoor menu-icon"></i>
+            <span class="menu-title">Pemusnaan Barang</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url('history') }}">
             <i class="mdi mdi-history menu-icon"></i>
             <span class="menu-title">Riwayat Kegiatan</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
+          <a class="nav-link" href="{{ url('user') }}">
             <i class="mdi mdi-account menu-icon"></i>
             <span class="menu-title">Manajemen User</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
+          <a class="nav-link" href="{{ url('laporan') }}">
             <i class="mdi mdi-file-chart menu-icon"></i>
             <span class="menu-title">Laporan Barang</span>
           </a>
@@ -86,10 +92,10 @@
           <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
             <span class="mdi mdi-menu"></span>
           </button>
-          <div class="ml-4 mb-2"><h4 class="font-weight-bold mb-0 d-none d-md-block mt-1">Selamat Datang, Dewa</h4></div>
+          <div class="ml-4 mb-2"><h4 class="font-weight-bold mb-0 d-none d-md-block mt-1">Selamat Datang, {{ Auth::user()->name }}</h4></div>
           <ul class="navbar-nav navbar-nav-right">
             <li class="nav-item">
-              <h4 class="mb-0 font-weight-bold d-none d-xl-block">Mar 12, 2025 - Apr 10, 2025</h4>
+              <h4 id="tanggal-waktu" class="mb-0 font-weight-bold d-none d-xl-block"></h4>
             </li>
             <li class="nav-item dropdown mr-2">
               <a class="nav-link count-indicator dropdown-toggle d-flex align-items-center justify-content-center" id="notificationDropdown" href="#" data-toggle="dropdown">
@@ -156,28 +162,24 @@
             <li class="nav-item nav-profile dropdown">
               <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
                 <img src="images/faces/face5.jpg" alt="profile"/>
-                <span class="nav-profile-name">Dewa</span>
+                <span class="nav-profile-name">{{ Auth::user()->name }}</span>
               </a>
               <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
                 <a class="dropdown-item">
                   <i class="mdi mdi-settings text-primary"></i>
                   Settings
                 </a>
-                <a class="dropdown-item">
-                  <i class="mdi mdi-logout text-primary"></i>
-                  Logout
-                </a>
+                <a class="dropdown-item" href="{{ route('logout') }}"
+                onclick="event.preventDefault();
+                                 document.getElementById('logout-form').submit();">
+                {{ __('Logout') }}
+            </a>
+
+            <form id="logout-form" action="{{ route('logout') }}" method="POST"
+            class="d-none">
+            @csrf
+        </form>
               </div>
-            </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link icon-link">
-                <i class="mdi mdi-plus-circle-outline"></i>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link icon-link">
-                <i class="mdi mdi-web"></i>
-              </a>
             </li>
             <li class="nav-item">
               <a href="#" class="nav-link icon-link">
@@ -230,6 +232,8 @@
   <!-- End plugin js for this page -->
   <!-- Custom js for this page-->
   <script src="js/dashboard.js"></script>
+  <!-- End custom js for this page-->
+  <script src="js/chart.js"></script>
   <!-- End custom js for this page-->
 </body>
 

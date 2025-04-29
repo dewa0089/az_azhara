@@ -10900,8 +10900,8 @@ fieldset:disabled a.btn {
 
 .btn-primary {
   color: #fff;
-  background-color: #6640b2;
-  border-color: #6640b2;
+  background-color: #66CDAA;
+  
 }
 
 .btn-primary:hover {
@@ -20345,12 +20345,12 @@ dl li {
 /* === Landing screens === */
 /* Auth */
 .auth .login-half-bg {
-  background: url("../images/auth/login-bg.jpg");
+  background: url("../images/gedung.jpeg");
   background-size: cover;
 }
 
 .auth .register-half-bg {
-  background: url("../images/auth/register-bg.jpg");
+  background: url("../images/gedung.jpeg");
   background-size: cover;
 }
 
@@ -20378,7 +20378,7 @@ dl li {
 }
 
 .auth .auth-form-transparent {
-  background: transparent;
+  background: white;
 }
 
 .auth .auth-form-transparent .form-control,
@@ -20397,6 +20397,7 @@ dl li {
 }
 
 .auth.auth-img-bg {
+  background-color: #20B2AA;
   padding: 0;
 }
 
@@ -20408,11 +20409,15 @@ dl li {
 }
 
 .auth .brand-logo {
-  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1rem;
 }
 
 .auth .brand-logo img {
-  width: 150px;
+  width: 60px;
+  height: auto;
 }
 
 .auth form .form-group {
@@ -20507,7 +20512,7 @@ dl li {
 /* Sidebar */
 .sidebar {
   min-height: calc(100vh - 65px);
-  background: #223e9c;
+  background: #20B2AA;
   font-family: "Source Sans Pro", sans-serif;
   font-weight: 600;
   padding: 0;
@@ -20627,7 +20632,7 @@ dl li {
 }
 
 .sidebar .nav .nav-item.active > .nav-link {
-  background: #183188;
+  background: #008B8B;
   position: relative;
 }
 
@@ -20650,7 +20655,7 @@ dl li {
 }
 
 .sidebar .nav:not(.sub-menu) > .nav-item:hover > .nav-link {
-  background: #183188;
+  background: #008B8B;
   color: #ffffff;
 }
 
@@ -20723,7 +20728,7 @@ dl li {
   -webkit-transition: background 0.25s ease;
   -moz-transition: background 0.25s ease;
   -ms-transition: background 0.25s ease;
-  background: url(../images/other/navbar-cover.jpg) center center no-repeat;
+  background: url(../images/other/navbar-cover2.jpg) center center no-repeat;
   background-size: cover;
   height: 262px;
   width: auto;

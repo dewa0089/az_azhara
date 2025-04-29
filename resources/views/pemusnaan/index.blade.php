@@ -1,12 +1,21 @@
 @extends('layout.main')
-@section('main', 'barang')
+@section('main', 'pemusnaan')
 
 @section('content')
 <div class="row">
   <div class="col-lg-12 grid-margin stretch-card">
     <div class="card">
       <div class="card-body">
-        <h4 class="card-title">Aset Barang Sekolah</h4>
+        <div class="row mb-1">
+          <div class="col">
+            <h4 class="card-title">Pemusnaan Barang</h4>
+          </div>
+          <div class="col text-end d-flex align-items-end justify-content-end">
+            <a href="{{ route('pemusnaan.create') }}" class="btn btn-success mdi mdi-upload btn-icon-prepend">
+              Ajukan Pemusnaan
+            </a>
+          </div>
+        </div>      
         <div class="table-responsive">
           <table class="table table-striped">
             <thead>
@@ -15,16 +24,25 @@
                   No
                 </th>
                 <th>
+                  Kode Barang
+                </th>
+                <th>
                   Nama Barang
+                </th>
+                <th>
+                  Harga Barang
+                </th>
+                <th>
+                  Gambar Barang
                 </th>
                 <th>
                   Jumlah Barang
                 </th>
                 <th>
-                  Kondisi Barang
+                  Status
                 </th>
                 <th>
-                  Gambar Barang
+                  Aksi
                 </th>
               </tr>
             </thead>

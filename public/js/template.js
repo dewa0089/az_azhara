@@ -87,3 +87,37 @@
     });  
   });
 })(jQuery);
+
+
+
+// Waktu
+
+function updateTanggalWaktu() {
+  const hari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+  const bulan = [
+    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+  ];
+
+  const sekarang = new Date();
+
+  const jam = sekarang.getHours().toString().padStart(2, '0');
+  const menit = sekarang.getMinutes().toString().padStart(2, '0');
+  const hariIni = hari[sekarang.getDay()];
+  const tanggal = sekarang.getDate();
+  const namaBulan = bulan[sekarang.getMonth()];
+  const tahun = sekarang.getFullYear();
+
+  const teks = `${jam}:${menit}<br>${hariIni}, ${tanggal} ${namaBulan}, ${tahun}`;
+  document.getElementById('tanggal-waktu').innerHTML = teks;
+}
+
+// Tampilkan langsung saat halaman dibuka
+updateTanggalWaktu();
+
+// Hitung sisa detik ke menit berikutnya, lalu set interval 1 menit
+const detikSekarang = new Date().getSeconds();
+setTimeout(() => {
+  updateTanggalWaktu();
+  setInterval(updateTanggalWaktu, 60000); // Update tiap 60 detik
+}, (60 - detikSekarang) * 1000);
