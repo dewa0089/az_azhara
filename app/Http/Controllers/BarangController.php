@@ -27,14 +27,14 @@ class BarangController extends Controller
             'jumlah_barang' => 'required',
             'harga_barang' => 'required',
             'gambar_barang' => 'nullable|image',
-            'tanggal_beli_barang' => 'required',
+            'tgl_peroleh' => 'required',
             'keterangan' => 'required',
         ]);
 
         // Proses upload gambar jika ada
         if ($request->hasFile('gambar_barang')) {
-            $imageName = time() . '.' . $request->gambar_barang->extension();
-            $request->gambar_barang->move(public_path('images'), $imageName);
+            $imageName = time() . '.' . $request->file('gambar_barang')->extension();
+            $request->file('gambar_barang')->move(public_path('gambar'), $imageName);
             $validated['gambar_barang'] = $imageName;
         }
 
@@ -59,14 +59,14 @@ class BarangController extends Controller
             'jumlah_barang' => 'required|integer',
             'harga_barang' => 'required|integer',
             'gambar_barang' => 'nullable|image',
-            'tanggal_beli_barang' => 'required|date',
+            'tgl_peroleh' => 'required|date',
             'keterangan' => 'nullable|string',
         ]);
 
         // Proses upload gambar jika ada
         if ($request->hasFile('gambar_barang')) {
-            $imageName = time() . '.' . $request->gambar_barang->extension();
-            $request->gambar_barang->move(public_path('images'), $imageName);
+            $imageName = time() . '.' . $request->file('gambar_barang')->extension();
+            $request->file('gambar_barang')->move(public_path('gambar'), $imageName);
             $validated['gambar_barang'] = $imageName;
         }
 

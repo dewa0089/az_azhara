@@ -12,9 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('peminjamans', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
+            $table->string('nama_peminjam');
+            $table->string('jumlah_peminjam');
+            $table->date('tgl_peminjam');
+            $table->uuid('barang_id');
+            $table->foreign('barang_id')->references('id')->on('barangs')->restrictOnDelete()->restrictOnUpdate();
+            $table->string('status')->default('Menunggu Persetujuan');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->restrictOnDelete()->restrictOnUpdate();
             $table->timestamps();
-        });
+            
+        });        
     }
 
     /**

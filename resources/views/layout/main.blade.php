@@ -41,6 +41,12 @@
           </a>
         </li>
         <li class="nav-item">
+          <a class="nav-link" href="{{ url('rusak') }}">
+            <i class="mdi mdi-folder-remove menu-icon"></i>
+            <span class="menu-title">Detail Barang</span>
+          </a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" href="{{ url('peminjaman') }}">
             <i class="mdi mdi-file-restore menu-icon"></i>
             <span class="menu-title">Peminjaman Barang</span>
@@ -53,11 +59,12 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{{ url('barangRusak') }}">
+          <a class="nav-link" href="{{ url('rusak') }}">
             <i class="mdi mdi-folder-remove menu-icon"></i>
             <span class="menu-title">Barang Rusak</span>
           </a>
         </li>
+        
         <li class="nav-item">
           <a class="nav-link" href="{{ url('pemusnaan') }}">
             <i class="mdi mdi-glassdoor menu-icon"></i>
@@ -67,7 +74,7 @@
         <li class="nav-item">
           <a class="nav-link" href="{{ url('history') }}">
             <i class="mdi mdi-history menu-icon"></i>
-            <span class="menu-title">Riwayat Kegiatan</span>
+            <span class="menu-title">Riwayat</span>
           </a>
         </li>
         <li class="nav-item">

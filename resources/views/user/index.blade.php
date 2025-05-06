@@ -30,7 +30,7 @@
                   Nama User
                 </th>
                 <th>
-                  Username
+                  Email
                 </th>
                 <th>
                   Password
@@ -41,25 +41,33 @@
               </tr>
             </thead>
             <tbody>
+              @foreach ($user as $item)
               <tr>
-                <td class="py-1">
-                  1
-                </td>
-                <td>
-                  Meja
-                </td>
-                <td>
-                  5
-                </td>
-                <td>
-                  <div class="progress">
-                      <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                </td>
-                <td>
-                  <img src="images/faces/face1.jpg" alt="image"/>
-                </td>
+                 <td>{{ $loop->iteration }}</td>                
+                  <td>{{ $item['id'] }}</td>
+                  <td>{{ $item['name'] }}</td>
+                  <td>{{ $item['email'] }}</td>
+                  <td>{{ $item['password'] }}</td>
+                  <td>{{ $item['role'] }}</td>
+                  <td>
+                      <div class="d-flex justify-content-center">
+                        <a href="{{ route('barang.edit', $item->id) }}">
+                          <button class="btn btn-success btn-sm mx-3">Edit</button>
+                      </a>
+                      <form method="POST" action="{{ route('user.destroy', $item->id) }}">
+                          @method('delete')
+                          @csrf
+                          <button type="submit" class="btn btn-danger btn-sm show_confirm"
+                              data-toggle="tooltip" title='Delete'
+                              data-nama='{{ $item->nama_barang }}'>Hapus Data</button>
+                      </form>
+                          </form>
+                      </div>
+
+
+                  </td>
               </tr>
+          @endforeach
              
             </tbody>
           </table>

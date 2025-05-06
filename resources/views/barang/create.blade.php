@@ -47,9 +47,9 @@
                                 <label class="text-danger">{{ $message }}</label>
                             @enderror
 
-                            <label for="tanggal_beli_barang">Tanggal Peroleh</label>
-                            <input type="date" class="form-control" name="tanggal_beli_barang" value="{{ old('tanggal_beli_barang') }}">
-                            @error('tanggal_beli_barang')
+                            <label for="tgl_peroleh">Tanggal Peroleh</label>
+                            <input type="date" class="form-control" name="tgl_peroleh" value="{{ old('tgl_peroleh') }}">
+                            @error('tgl_peroleh')
                                 <label class="text-danger">{{ $message }}</label>
                             @enderror
 

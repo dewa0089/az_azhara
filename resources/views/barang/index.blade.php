@@ -57,9 +57,9 @@
                   <td>{{ $item['nama_barang'] }}</td>
                   <td>{{ $item['jumlah_barang'] }}</td>
                   <td>{{ $item['harga_barang'] }}</td>
-                  <td><img src="gambar_barang/{{ $item['gambar_barang'] }}" class="rounded-circle" width="70px" />
+                  <td><img src="gambar/{{ $item['gambar_barang'] }}" class="rounded-circle" width="70px" />
                   </td>
-                  <td>{{ $item['tanggal_beli_barang'] }}</td>
+                  <td>{{ $item['tgl_peroleh'] }}</td>
                   <td>{{ $item['keterangan'] }}</td>
                   <td>
                       <div class="d-flex justify-content-center">

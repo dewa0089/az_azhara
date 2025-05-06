@@ -35,7 +35,7 @@
                 </div>
 
                 <div class="form-group">
-                  <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}>Email</label>
+                  <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
                   <div class="input-group">
                     <div class="input-group-prepend bg-transparent">
                       <span class="input-group-text bg-transparent border-right-0">

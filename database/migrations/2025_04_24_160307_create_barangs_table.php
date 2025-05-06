@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('jumlah_barang');
             $table->integer('harga_barang');
             $table->string('gambar_barang')->nullable();
-            $table->date('tanggal_beli_barang');
+            $table->date('tgl_peroleh');
             $table->text('keterangan')->nullable();
             $table->timestamps();
         });
