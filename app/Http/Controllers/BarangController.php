@@ -25,18 +25,17 @@ class BarangController extends Controller
             'kode_barang' => 'required|unique:barangs',
             'nama_barang' => 'required',
             'jumlah_barang' => 'required',
-            'harga_barang' => 'required',
-            'gambar_barang' => 'nullable|image',
             'tgl_peroleh' => 'required',
-            'keterangan' => 'required',
+            'harga_perunit' => 'required',
+            'total_harga' => 'required',
         ]);
 
         // Proses upload gambar jika ada
-        if ($request->hasFile('gambar_barang')) {
-            $imageName = time() . '.' . $request->file('gambar_barang')->extension();
-            $request->file('gambar_barang')->move(public_path('gambar'), $imageName);
-            $validated['gambar_barang'] = $imageName;
-        }
+        // if ($request->hasFile('gambar_barang')) {
+        //     $imageName = time() . '.' . $request->file('gambar_barang')->extension();
+        //     $request->file('gambar_barang')->move(public_path('gambar'), $imageName);
+        //     $validated['gambar_barang'] = $imageName;
+        // }
 
         // Simpan data ke database
         Barang::create($validated);
@@ -56,19 +55,18 @@ class BarangController extends Controller
         $validated = $request->validate([
             'kode_barang' => 'required|unique:barangs,kode_barang,' . $id,
             'nama_barang' => 'required',
-            'jumlah_barang' => 'required|integer',
-            'harga_barang' => 'required|integer',
-            'gambar_barang' => 'nullable|image',
-            'tgl_peroleh' => 'required|date',
-            'keterangan' => 'nullable|string',
+            'jumlah_barang' => 'required',
+            'tgl_peroleh' => 'required',
+            'harga_perunit' => 'required',
+            'total_harga' => 'required',
         ]);
 
         // Proses upload gambar jika ada
-        if ($request->hasFile('gambar_barang')) {
-            $imageName = time() . '.' . $request->file('gambar_barang')->extension();
-            $request->file('gambar_barang')->move(public_path('gambar'), $imageName);
-            $validated['gambar_barang'] = $imageName;
-        }
+        // if ($request->hasFile('gambar_barang')) {
+        //     $imageName = time() . '.' . $request->file('gambar_barang')->extension();
+        //     $request->file('gambar_barang')->move(public_path('gambar'), $imageName);
+        //     $validated['gambar_barang'] = $imageName;
+        // }
 
         // Update data ke database
         Barang::find($id)->update($validated);

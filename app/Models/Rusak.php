@@ -10,11 +10,22 @@ class Rusak extends Model
 {
     use HasFactory, HasUuids;
     protected $table = 'rusaks';
-    protected $fillable = ['pengembalian_id'];
+    protected $fillable = ['jenis_brg_rusak','jumlah_brg_rusak', 'gambar_brg_rusak', 'tgl_rusak','keterangan', 'status', 'elektronik_id', 'lainnya_id', 'mobiler_id'];
 
-    public function pengembalian()
+    public function elektronik()
     {
-        return $this->belongsTo(pengembalian::class, 'pengembalian_id');
+        return $this->belongsTo(elektronik::class, 'elektronik_id');
     }
+
+    public function lainnya()
+    {
+        return $this->belongsTo(lainnya::class, 'lainnya_id');
+    }
+
+    public function mobiler()
+    {
+        return $this->belongsTo(mobiler::class, 'mobiler_id');
+    }
+
 
 }

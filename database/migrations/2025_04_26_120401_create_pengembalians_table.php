@@ -12,14 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('pengembalians', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->integer('jumlah_pengembalian')->nullable();
-            $table->integer('jumlah_barang_rusak')->nullable();
-            $table->integer('jumlah_barang_hilang')->nullable();
-            $table->date('tanggal_pengembalian')->nullable();
+            $table->uuid('id');
+            $table->primary('id');
+            $table->integer('jumlah_brg_baik')->nullable();
+            $table->integer('jumlah_brg_rusak')->nullable();
+            $table->integer('jumlah_brg_hilang')->nullable();
+            $table->date('tgl_pengembalian')->nullable();
             $table->uuid('peminjaman_id');
             $table->foreign('peminjaman_id')->references('id')->on('peminjamans')->restrictOnDelete()->restrictOnUpdate();
-            $table->string('status')->default('Dipijam')->nullable();
+            $table->string('status')->default('Belum Di kembalikan')->nullable();
             $table->timestamps();
         });
     }

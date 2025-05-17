@@ -10,6 +10,6 @@ class Barang extends Model
 {
     use HasFactory, HasUuids;
     protected $table = 'barangs';
-    protected $fillable = ['kode_barang', 'nama_barang', 'jumlah_barang', 'harga_barang', 'gambar_barang', 'tgl_peroleh', 'keterangan'];
+    protected $fillable = ['kode_barang', 'nama_barang', 'jumlah_barang', 'tgl_peroleh', 'harga_perunit', 'total_harga'];
 
 }

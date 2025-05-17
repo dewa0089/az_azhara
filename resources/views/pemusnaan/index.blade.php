@@ -10,63 +10,65 @@
           <div class="col">
             <h4 class="card-title">Pemusnaan Barang</h4>
           </div>
-          <div class="col text-end d-flex align-items-end justify-content-end">
-            <a href="{{ route('pemusnaan.create') }}" class="btn btn-success mdi mdi-upload btn-icon-prepend">
-              Ajukan Pemusnaan
-            </a>
-          </div>
         </div>      
         <div class="table-responsive">
           <table class="table table-striped">
             <thead>
               <tr>
-                <th>
-                  No
-                </th>
-                <th>
-                  Kode Barang
-                </th>
-                <th>
-                  Nama Barang
-                </th>
-                <th>
-                  Harga Barang
-                </th>
-                <th>
-                  Gambar Barang
-                </th>
-                <th>
-                  Jumlah Barang
-                </th>
-                <th>
-                  Status
-                </th>
-                <th>
-                  Aksi
-                </th>
+                <th>No</th>
+                <th>Kode Barang</th>
+                <th>Nama Barang</th>
+                <th>Merk</th>
+                <th>Type</th>
+                <th>Tanggal Peroleh Barang</th>
+                <th>Tanggal Rusak</th>
+                <th>Tanggal Pemusnaan</th>
+                <th>Asal Usul</th>
+                <th>Cara Perolehan</th>
+                <th>Jumlah dimusnakan</th>
+                <th>Gambar Barang Rusak</th>
+                <th>Gambar Pemusnaan Barang</th>
+                <th>Harga/Unit</th>
+                <th>Total Harga</th>
+                <th>Keterangan</th>
               </tr>
             </thead>
             <tbody>
+              @foreach($pemusnaan as $item)
+              @php
+                  $barang = $item->rusak->elektronik ?? $item->rusak->mobiler ?? $item->rusak->lainnya;
+              @endphp
               <tr>
-                <td class="py-1">
-                  1
-                </td>
-                <td>
-                  Meja
-                </td>
-                <td>
-                  5
-                </td>
-                <td>
-                  <div class="progress">
-                      <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                </td>
-                <td>
-                  <img src="images/faces/face1.jpg" alt="image"/>
-                </td>
+                  <td>{{ $loop->iteration }}</td>
+                  <td>{{ $barang->kode_barang ?? '-' }}</td>
+                  <td>{{ $barang->nama_barang ?? '-' }}</td>
+                  <td>{{ $barang->merk ?? '-' }}</td>
+                  <td>{{ $barang->type ?? '-' }}</td>
+                  <td>{{ $barang->tgl_peroleh ?? '-' }}</td>
+                  <td>{{ $item->rusak->tgl_rusak }}</td>
+                  <td>{{ $item->tanggal_pemusnaan ?? '-' }}</td>
+                  <td>{{ $barang->asal_usul ?? '-' }}</td>
+                  <td>{{ $barang->cara_peroleh ?? '-' }}</td>
+                  <td>{{ $item->jumlah_pemusnaan }}</td>
+                  <td>
+                      @if($item->rusak->gambar_brg_rusak)
+                          <img src="{{ asset('gambar/' . $item->rusak->gambar_brg_rusak) }}" width="80">
+                      @else
+                          Tidak ada gambar
+                      @endif
+                  </td>
+                  <td>
+                      @if($item->gambar_pemusnaan)
+                          <img src="{{ asset('gambar/' . $item->gambar_pemusnaan) }}" width="80">
+                      @else
+                          Belum ada gambar
+                      @endif
+                  </td>
+                  <td>Rp {{ number_format($barang->harga_perunit ?? 0, 0, ',', '.') }}</td>
+                  <td>Rp {{ number_format(($barang->harga_perunit ?? 0) * $item->jumlah_pemusnaan, 0, ',', '.') }}</td>
+                  <td>{{ $item->keterangan }}</td>
               </tr>
-             
+              @endforeach
             </tbody>
           </table>
         </div>
@@ -74,13 +76,12 @@
     </div>
   </div>
 </div>
-
 @endsection
 
 @section('scripts')
-    <script>
-        @if (Session::get('success'))
-            toastr.success("{{ Session::get('success') }}")
-        @endif
-    </script>
+<script>
+    @if (Session::get('success'))
+        toastr.success("{{ Session::get('success') }}")
+    @endif
+</script>
 @endsection

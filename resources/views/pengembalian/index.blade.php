@@ -19,12 +19,11 @@
                 <th>Nama Peminjam</th>
                 <th>Kode Barang</th>
                 <th>Nama Barang</th>
-                <th>Harga Barang</th>
-                <th>Gambar Barang</th>
                 <th>Jumlah Peminjaman</th>
-                <th>Jumlah Pengembalian</th>
-                <th>Jumlah Rusak</th>
-                <th>Jumlah Hilang</th>
+                <th>Tanggal Batas Pengembalian</th>
+                <th>Jumlah Barang Baik</th>
+                <th>Jumlah Barang Rusak</th>
+                <th>Jumlah Barang Hilang</th>
                 <th>Tanggal Pengembalian</th>
                 <th>Status</th>
                 <th>Aksi</th>
@@ -33,36 +32,45 @@
             <tbody>
               @foreach ($pengembalian as $item)
               <tr>
-                <td>{{ $loop->iteration }}</td> 
-                <td>{{ $item->peminjaman->nama_peminjam }}</td>               
+                <td>{{ $loop->iteration }}</td>                
+                <td>{{ $item->peminjaman->nama_peminjam }}</td>
                 <td>{{ $item->peminjaman->barang->kode_barang }}</td>
                 <td>{{ $item->peminjaman->barang->nama_barang }}</td>
-                <td>Rp{{ number_format($item->peminjaman->barang->harga_barang, 0, ',', '.') }}</td>
-                <td>
-                  <img src="{{ asset('gambar/' . $item->peminjaman->barang->gambar_barang) }}" class="rounded-circle" width="70px" alt="Gambar Barang" />
-                </td>
                 <td>{{ $item->peminjaman->jumlah_peminjam }}</td>
-                <td>{{ $item->jumlah_pengembalian }}</td>
-                <td>{{ $item->jumlah_barang_rusak }}</td>
-                <td>{{ $item->jumlah_barang_hilang }}</td>
-                <td>{{ $item->tanggal_pengembalian ? \Carbon\Carbon::parse($item->tanggal_pengembalian)->format('d-m-Y') : '-' }}</td>
+                <td>{{ $item->peminjaman->tgl_kembali }}</td>
+                <td>{{ $item->jumlah_brg_baik ?? '-' }}</td>
+                <td>{{ $item->jumlah_brg_rusak ?? '-' }}</td>
+                <td>{{ $item->jumlah_brg_hilang ?? '-' }}</td>
+                <td>{{ $item->tgl_pengembalian ?? '-' }}</td>
                 <td>
-                  <span class="badge 
-                    @if($item->status == 'Disetujui') bg-success 
-                    @elseif($item->status == 'Ditolak') bg-danger 
-                    @elseif($item->status == 'Dibatalkan') bg-secondary 
-                    @else bg-warning text-dark 
-                    @endif">
-                    {{ $item->status }}
-                  </span>
+                <span class="badge 
+                  @if($item->status == 'Dikembalikan') bg-success 
+                  @elseif($item->status == 'Belum Dikembalikan') bg-warning text-dark 
+                  @elseif($item->status == 'Menunggu Persetujuan') bg-warning text-dark 
+                  @else bg-secondary 
+                  @endif">
+                  {{ $item->status }}
+                </span>
                 </td>
+
                 <td>
-                  @if($item->status === 'Belum Dikembalikan')
-                  <a href="{{ route('pengembalian.create.id', $item->peminjaman->id) }}" class="btn btn-success">Ajukan Pengembalian</a>
+              <div class="d-flex justify-content-center">
+                  @if ($item->status == 'Belum Dikembalikan') 
+                      <a href="{{ route('pengembalian.edit', $item->id) }}">
+                          <button class="btn btn-success btn-sm mx-2">Ajukan Pengembalian</button>
+                      </a>
+                  @elseif ($item->status == 'Menunggu Persetujuan')
+                      <form action="{{ route('pengembalian.setujui', $item->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menyetujui pengembalian ini?')">
+                          @csrf
+                          @method('PUT')
+                          <button class="btn btn-primary btn-sm">Setujui</button>
+                      </form>
                   @else
-                    <span class="text-muted">Sudah diproses</span>
+                      <span class="text-muted">Tidak ada aksi</span>
                   @endif
-                </td>
+              </div>
+              </td>
+                       
               </tr>
               @endforeach
             </tbody>

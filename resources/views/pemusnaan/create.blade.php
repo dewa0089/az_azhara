@@ -1,56 +1,40 @@
 @extends('layout.main')
-@section('title', 'Tambah Barang')
+@section('title', 'Tambah Pemusnaan')
 
 @section('content')
     <div class="row">
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Peminjaman Barang</h4>
+                    <h4 class="card-title">Pemusnaan Barang</h4>
                     <p class="card-description">
-                        Formulir Pengajuan
+                        Formulir Pemusnaan
                     </p>
-                    <form class="forms-sample" method="POST"
-                        enctype="multipart/form-data">
-                        @csrf
-                        <div class="form-group">
-                            <label for="nama">Nama Peminjam</label>
-                            <input type="text" class="form-control" name="nama" placeholder="Nama Peminjam">
-                            <label for="npm">Kode Barang</label>
-                            <input type="text" class="form-control" name="npm" placeholder="Kode Barang"
-                                value="{{ old('npm') }}">
-                            <label for="tmpt_lahir">Nama Barang</label>
-                            <input type="text" class="form-control" name="tmpt_lahir" placeholder="Jumlah Barang">
-                            <label for="tmpt_lahir">Harga Barang</label>
-                            <input type="text" class="form-control" name="jk" placeholder="Harga Barang">
-                            <label for="tmpt_lahir">Jumlah Peminjaman</label>
-                            <input type="text" class="form-control" name="jk" placeholder="Jumlah Peminjaman">
-                            <label for="tgl_lahir">Tanggal Peminjaman</label>
-                            <input type="text" class="form-control" name="tgl_lahir" placeholder="Tanggal Peroleh">
-                            <br>
-                            @error('npm')
-                                <label class="text-danger">{{ $message }}</label>
-                            @enderror
-                            @error('nama')
-                                <label class="text-danger">{{ $message }}</label>
-                            @enderror
-                            @error('tmpt_lahir')
-                                <label class="text-danger">{{ $message }}</label>
-                            @enderror
-                            @error('tgl_lahir')
-                                <label class="text-danger">{{ $message }}</label>
-                            @enderror
-                            @error('foto')
-                                <label class="text-danger">{{ $message }}</label>
-                            @enderror
-                            @error('prodi_id')
-                                <label class="text-danger">{{ $message }}</label>
-                            @enderror
+<form class="forms-sample" method="POST" action="{{ route('pemusnaan.store') }}" enctype="multipart/form-data">
+    @csrf
+    <input type="hidden" name="rusak_id" value="{{ request('rusak_id') }}">
 
-                        </div>
-                        <button type="submit" class="btn btn-primary mr-2">Simpan</button>
-                        <a href="{{ url('barang') }}" class="btn btn-light">Batal</a>
-                    </form>
+    <div class="form-group">
+        <label for="tanggal_pemusnaan">Tanggal Pemusnaan</label>
+        <input type="date" class="form-control" name="tanggal_pemusnaan" required>
+
+        <label for="jumlah_pemusnaan">Jumlah Dimusnahkan</label>
+        <input type="number" class="form-control" name="jumlah_pemusnaan" required>
+
+        <label for="gambar_pemusnaan">Gambar Pemusnaan</label>
+        <input type="file" class="form-control" name="gambar_pemusnaan">
+
+        <label for="keterangan">Keterangan</label>
+        <input type="text" class="form-control" name="keterangan">
+
+        @error('jumlah_pemusnaan')
+            <label class="text-danger">{{ $message }}</label>
+        @enderror
+    </div>
+
+    <button type="submit" class="btn btn-primary mr-2">Simpan</button>
+    <a href="{{ url('pemusnaan') }}" class="btn btn-light">Batal</a>
+</form>
                 </div>
             </div>
         </div>
