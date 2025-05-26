@@ -62,15 +62,16 @@
     <td>{{ $item->tgl_rusak }}</td>
     <td>{{ $item->keterangan }}</td>
     <td>Rp {{ number_format($barang->harga_perunit ?? 0, 0, ',', '.') }}</td>
-    <td>
-        <span class="badge 
-            @if($item->status == 'Dimusnahkan') bg-danger 
-            @elseif($item->status == 'Diajukan Pemusnaan') bg-warning text-dark 
-            @else bg-secondary 
-            @endif">
-            {{ $item->status }}
-        </span>
-    </td>
+ <td>
+  <span class="badge 
+    @if($item->status == 'Berhasil Dimusnakan') bg-danger 
+    @else bg-warning text-dark 
+    @endif">
+    {{ $item->status }}
+  </span>
+</td>
+
+
    <td>
   <div class="d-flex justify-content-center">
       <!-- Tombol Delete -->

@@ -53,12 +53,12 @@ class UserController extends Controller
         // Update data ke database
         User::find($id)->update($validated);
 
-        return redirect()->route('manajemen.index')->with('success', 'Data Barang berhasil diupdate');
+        return redirect()->route('user.index')->with('success', 'Data Barang berhasil diupdate');
     }
 
     public function destroy($id)
     {
         User::find($id)->delete();
-        return redirect()->route('manajemen.index')->with('success', 'Data Barang berhasil dihapus');
+        return redirect()->route('user.index')->with('success', 'Data Barang berhasil dihapus');
     }
 }

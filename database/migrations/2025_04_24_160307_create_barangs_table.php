@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('kode_barang')->unique();
             $table->string('nama_barang');
             $table->integer('jumlah_barang');
+            $table->integer('jumlah_rusak');
+            $table->integer('jumlah_hilang');
             $table->date('tgl_peroleh');
             $table->integer('harga_perunit');
             $table->integer('total_harga')->nullable();

@@ -18,8 +18,10 @@
         <label for="tanggal_pemusnaan">Tanggal Pemusnaan</label>
         <input type="date" class="form-control" name="tanggal_pemusnaan" required>
 
-        <label for="jumlah_pemusnaan">Jumlah Dimusnahkan</label>
-        <input type="number" class="form-control" name="jumlah_pemusnaan" required>
+       <label for="jumlah_pemusnaan">Jumlah Dimusnahkan</label>
+<input type="number" class="form-control" name="jumlah_pemusnaan"
+       value="{{ $rusak->jumlah_brg_rusak }}" readonly>
+
 
         <label for="gambar_pemusnaan">Gambar Pemusnaan</label>
         <input type="file" class="form-control" name="gambar_pemusnaan">

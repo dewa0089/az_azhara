@@ -31,6 +31,13 @@ class PemusnaanController extends Controller
         'keterangan' => 'required|string'
     ]);
 
+    $rusak = Rusak::findOrFail($request->rusak_id);
+
+    // ✅ Validasi tambahan agar jumlah tidak bisa dimanipulasi
+    if ((int) $request->jumlah_pemusnaan !== $rusak->jumlah_brg_rusak) {
+        return back()->withErrors(['jumlah_pemusnaan' => 'Jumlah pemusnaan harus sama dengan jumlah barang rusak.']);
+    }
+
     if ($request->hasFile('gambar_pemusnaan')) {
         $imageName = time() . '.' . $request->file('gambar_pemusnaan')->extension();
         $request->file('gambar_pemusnaan')->move(public_path('gambar'), $imageName);
@@ -38,8 +45,8 @@ class PemusnaanController extends Controller
         $imageName = null;
     }
 
-    // Simpan data pemusnaan
-    $pemusnaan = Pemusnaan::create([
+    // Simpan data ke pemusnaan
+    Pemusnaan::create([
         'rusak_id' => $request->rusak_id,
         'tanggal_pemusnaan' => $request->tanggal_pemusnaan,
         'jumlah_pemusnaan' => $request->jumlah_pemusnaan,
@@ -47,23 +54,13 @@ class PemusnaanController extends Controller
         'keterangan' => $request->keterangan,
     ]);
 
-    // Update jumlah barang rusak pada model Rusak
-    $rusak = Rusak::findOrFail($request->rusak_id);
-    $rusak->jumlah_brg_rusak -= $request->jumlah_pemusnaan;
+    // Ubah status barang rusak menjadi 'Dimusnahkan'
+    $rusak->status = 'Dimusnahkan';
+    $rusak->save();
 
-    if ($rusak->jumlah_brg_rusak <= 0) {
-        // Jika sudah 0 atau kurang, hapus data rusak
-        if ($rusak->gambar_brg_rusak && file_exists(public_path('gambar/' . $rusak->gambar_brg_rusak))) {
-            unlink(public_path('gambar/' . $rusak->gambar_brg_rusak));
-        }
-        $rusak->delete();
-    } else {
-        // Simpan perubahan jumlah barang rusak
-        $rusak->save();
-    }
-
-    return redirect()->route('pemusnaan.index')->with('success', 'Pemusnaan berhasil diajukan dan jumlah barang rusak diperbarui.');
+    return redirect()->route('pemusnaan.index')->with('success', 'Pemusnaan berhasil dan status barang rusak diperbarui.');
 }
+
 
 
     public function edit($id)

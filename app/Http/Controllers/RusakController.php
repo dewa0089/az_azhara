@@ -27,32 +27,58 @@ class RusakController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'jenis_brg_rusak' => 'required',
-            'jumlah_brg_rusak' => 'required|integer|min:1',
-            'gambar_brg_rusak' => 'required|image|mimes:jpeg,png,jpg,gif',
-            'tgl_rusak' => 'required|date',
-            'keterangan' => 'required|string',
-            'elektronik_id' => 'nullable|exists:elektroniks,id',
-            'mobiler_id' => 'nullable|exists:mobilers,id',
-            'lainnya_id' => 'nullable|exists:lainnyas,id',
-        ]);
+{
+    $request->validate([
+        'jenis_brg_rusak' => 'required',
+        'jumlah_brg_rusak' => 'required|integer|min:1',
+        'gambar_brg_rusak' => 'required|image|mimes:jpeg,png,jpg,gif',
+        'tgl_rusak' => 'required|date',
+        'keterangan' => 'required|string',
+        'elektronik_id' => 'nullable|exists:elektroniks,id',
+        'mobiler_id' => 'nullable|exists:mobilers,id',
+        'lainnya_id' => 'nullable|exists:lainnyas,id',
+    ]);
 
-        $data = $request->all();
-        $data['status'] = 'Rusak';
+    $data = $request->all();
+    $data['status'] = 'Rusak';
 
-        if ($request->hasFile('gambar_brg_rusak')) {
-            $file = $request->file('gambar_brg_rusak');
-            $fileName = time() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('gambar'), $fileName);
-            $data['gambar_brg_rusak'] = $fileName;
-        }
-
-        Rusak::create($data);
-
-        return redirect()->route('rusak.index')->with('success', 'Data Barang Rusak berhasil disimpan');
+    // Upload gambar
+    if ($request->hasFile('gambar_brg_rusak')) {
+        $file = $request->file('gambar_brg_rusak');
+        $fileName = time() . '.' . $file->getClientOriginalExtension();
+        $file->move(public_path('gambar'), $fileName);
+        $data['gambar_brg_rusak'] = $fileName;
     }
+
+    // Kurangi jumlah barang dari inventaris sesuai jenis
+    $jumlahRusak = (int)$request->jumlah_brg_rusak;
+
+    if ($request->jenis_brg_rusak === 'elektronik' && $request->elektronik_id) {
+        $barang = Elektronik::find($request->elektronik_id);
+        if ($barang && $barang->jumlah_brg >= $jumlahRusak) {
+            $barang->jumlah_brg -= $jumlahRusak;
+            $barang->save();
+        }
+    } elseif ($request->jenis_brg_rusak === 'mobiler' && $request->mobiler_id) {
+        $barang = Mobiler::find($request->mobiler_id);
+        if ($barang && $barang->jumlah_brg >= $jumlahRusak) {
+            $barang->jumlah_brg -= $jumlahRusak;
+            $barang->save();
+        }
+    } elseif ($request->jenis_brg_rusak === 'lainnya' && $request->lainnya_id) {
+        $barang = Lainnya::find($request->lainnya_id);
+        if ($barang && $barang->jumlah_brg >= $jumlahRusak) {
+            $barang->jumlah_brg -= $jumlahRusak;
+            $barang->save();
+        }
+    }
+
+    // Simpan data rusak
+    Rusak::create($data);
+
+    return redirect()->route('rusak.index')->with('success', 'Data Barang Rusak berhasil disimpan');
+}
+
 
     public function edit($id)
     {
