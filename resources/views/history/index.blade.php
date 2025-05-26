@@ -6,7 +6,7 @@
   <div class="col-lg-12 grid-margin stretch-card">
     <div class="card">
       <div class="card-body">
-        <h4 class="card-title">History Barang</h4>
+        <h4 class="card-title">History Kegiatan</h4>
         <div class="table-responsive">
           <table class="table table-striped">
             <thead>
@@ -18,13 +18,7 @@
                   Nama Barang
                 </th>
                 <th>
-                  Jumlah Barang
-                </th>
-                <th>
-                  Kondisi Barang
-                </th>
-                <th>
-                  Gambar Barang
+                  Kode Barang
                 </th>
                 <th>
                   Jenis Kegiatan
@@ -33,30 +27,28 @@
                   Tanggal Kegiatan
                 </th>
                 <th>
+                  Waktu Kegiatan
+                </th>
+                <th>
                   Status
                 </th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td class="py-1">
-                  1
-                </td>
-                <td>
-                  Meja
-                </td>
-                <td>
-                  5
-                </td>
-                <td>
-                  <div class="progress">
-                      <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                </td>
-                <td>
-                  <img src="images/faces/face1.jpg" alt="image"/>
-                </td>
-              </tr>
+              <tbody>
+@foreach($histories as $index => $history)
+<tr>
+  <td>{{ $index + 1 }}</td>
+  <td>{{ $history->item->nama_barang ?? '-' }}</td>
+  <td>{{ $history->item->kode_barang ?? '-' }}</td>
+  <td>{{ ucfirst($history->jenis_kegiatan) }}</td>
+  <td>{{ $history->tanggal_kegiatan }}</td>
+  <td>{{ $history->waktu_kegiatan }}</td>
+  <td>{{ ucfirst($history->status) }}</td>
+</tr>
+@endforeach
+</tbody>
+
              
             </tbody>
           </table>

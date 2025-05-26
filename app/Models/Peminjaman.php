@@ -10,7 +10,7 @@ class Peminjaman extends Model
 {
     use HasFactory, HasUuids;
     protected $table = 'peminjamans';
-    protected $fillable = ['nama_peminjam', 'jumlah_peminjam', 'tgl_peminjam', 'status', 'barang_id', 'user_id'];
+    protected $fillable = ['nama_peminjam', 'jumlah_peminjam', 'tgl_peminjam', 'tgl_kembali', 'status', 'barang_id', 'user_id'];
 
     public function barang()
     {

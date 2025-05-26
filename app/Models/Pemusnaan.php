@@ -10,10 +10,10 @@ class Pemusnaan extends Model
 {
     use HasFactory, HasUuids;
     protected $table = 'pemusnaans';
-    protected $fillable = ['jumlah_pemusnaan', 'tanggal_pemusnaan', 'keterangan', 'status', 'barang_rusak_id'];
+    protected $fillable = ['jumlah_pemusnaan', 'tanggal_pemusnaan', 'gambar_pemusnaan' ,'keterangan', 'rusak_id'];
 
-    public function barang_rusak()
+    public function rusak()
     {
-        return $this->belongsTo(barang_rusak::class, 'barang_rusak_id');
+        return $this->belongsTo(rusak::class, 'rusak_id');
     }
 }

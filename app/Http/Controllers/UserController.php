@@ -22,8 +22,8 @@ class UserController extends Controller
     {
         // Validasi input
         $validated = $request->validate([
-            'nama_user' => 'required',
-            'username' => 'required|unique:users',
+            'name' => 'required',
+            'email' => 'required|unique:users',
             'password' => 'required',
             'role' => 'required'
         ]);
@@ -31,7 +31,7 @@ class UserController extends Controller
         // Simpan data ke database
         User::create($validated);
 
-        return redirect()->route('manajemen.index')->with('success', 'Data Barang berhasil disimpan');
+        return redirect()->route('user.index')->with('success', 'Data User berhasil disimpan');
     }
 
     public function edit($id)
@@ -44,8 +44,8 @@ class UserController extends Controller
     {
         // Validasi input
         $validated = $request->validate([
-            'nama_user' => 'required',
-            'username' => 'required|unique:users',
+            'name' => 'required',
+            'email' => 'required|unique:users',
             'password' => 'required',
             'role' => 'required'
         ]);
@@ -53,12 +53,12 @@ class UserController extends Controller
         // Update data ke database
         User::find($id)->update($validated);
 
-        return redirect()->route('manajemen.index')->with('success', 'Data Barang berhasil diupdate');
+        return redirect()->route('user.index')->with('success', 'Data Barang berhasil diupdate');
     }
 
     public function destroy($id)
     {
         User::find($id)->delete();
-        return redirect()->route('manajemen.index')->with('success', 'Data Barang berhasil dihapus');
+        return redirect()->route('user.index')->with('success', 'Data Barang berhasil dihapus');
     }
 }

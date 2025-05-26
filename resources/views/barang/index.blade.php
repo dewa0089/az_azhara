@@ -20,67 +20,43 @@
           <table class="table table-striped">
             <thead>
               <tr>
-                <th>
-                  No
-                </th>
-                <th>
-                  Kode Barang
-                </th>
-                <th>
-                  Nama Barang
-                </th>
-                <th>
-                  Jumlah Barang
-                </th>
-                <th>
-                  Harga Barang
-                </th>
-                <th>
-                  Gambar Barang
-                </th>
-                <th>
-                  Tanggal Barang Di beli
-                </th>
-                <th>
-                  Keterangan
-                </th>
-                <th>
-                  Aksi
-                </th>
+                <th>No</th>
+                <th>Kode Barang</th>
+                <th>Nama Barang</th>
+                <th>Jumlah Barang</th>
+                <th>Tanggal Peroleh</th>
+                <th>Harga Per Unit</th>
+                <th>Total Harga</th>
+                <th>Aksi</th>
               </tr>
             </thead>
             <tbody>
               @foreach ($barang as $item)
               <tr>
-                 <td>{{ $loop->iteration }}</td>                
-                  <td>{{ $item['kode_barang'] }}</td>
-                  <td>{{ $item['nama_barang'] }}</td>
-                  <td>{{ $item['jumlah_barang'] }}</td>
-                  <td>{{ $item['harga_barang'] }}</td>
-                  <td><img src="gambar/{{ $item['gambar_barang'] }}" class="rounded-circle" width="70px" />
-                  </td>
-                  <td>{{ $item['tgl_peroleh'] }}</td>
-                  <td>{{ $item['keterangan'] }}</td>
-                  <td>
-                      <div class="d-flex justify-content-center">
-                        <a href="{{ route('barang.edit', $item->id) }}">
-                          <button class="btn btn-success btn-sm mx-3">Edit</button>
-                      </a>
-                      <form method="POST" action="{{ route('barang.destroy', $item->id) }}">
-                          @method('delete')
-                          @csrf
-                          <button type="submit" class="btn btn-danger btn-sm show_confirm"
+                <td>{{ $loop->iteration }}</td>                
+                <td>{{ $item['kode_barang'] }}</td>
+                <td>{{ $item['nama_barang'] }}</td>
+                <td>{{ $item['jumlah_barang'] }}</td>
+                <td>{{ $item['tgl_peroleh'] }}</td>
+                <td>Rp {{ number_format($item['harga_perunit'], 0, ',', '.') }}</td>
+                {{-- Hitung total harga langsung di blade --}}
+                <td>Rp {{ number_format($item['jumlah_barang'] * $item['harga_perunit'], 0, ',', '.') }}</td>
+                <td>
+                  <div class="d-flex justify-content-center">
+                    <a href="{{ route('barang.edit', $item->id) }}">
+                      <button class="btn btn-success btn-sm mx-3">Edit</button>
+                    </a>
+                    <form method="POST" action="{{ route('barang.destroy', $item->id) }}">
+                      @method('delete')
+                      @csrf
+                      <button type="submit" class="btn btn-danger btn-sm show_confirm"
                               data-toggle="tooltip" title='Delete'
                               data-nama='{{ $item->nama_barang }}'>Hapus Data</button>
-                      </form>
-                          </form>
-                      </div>
-
-
-                  </td>
+                    </form>
+                  </div>
+                </td>
               </tr>
-          @endforeach
-             
+              @endforeach
             </tbody>
           </table>
         </div>
@@ -92,9 +68,9 @@
 @endsection
 
 @section('scripts')
-    <script>
-        @if (Session::get('success'))
-            toastr.success("{{ Session::get('success') }}")
-        @endif
-    </script>
+<script>
+  @if (Session::get('success'))
+    toastr.success("{{ Session::get('success') }}")
+  @endif
+</script>
 @endsection

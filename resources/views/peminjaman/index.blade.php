@@ -25,9 +25,9 @@
                 <th>Kode Barang</th>
                 <th>Nama Barang</th>
                 <th>Jumlah Peminjaman</th>
-                <th>Harga Barang</th>
-                <th>Gambar Barang</th>
+                {{-- <th>Gambar Barang</th> --}}
                 <th>Tanggal Peminjaman</th>
+                <th>Tanggal Batas Pengembalian</th>
                 <th>Status</th>
                 <th>Aksi</th>
               </tr>
@@ -40,9 +40,9 @@
                   <td>{{ $item['barang']['kode_barang'] }}</td>
                   <td>{{ $item['barang']['nama_barang'] }}</td>
                   <td>{{ $item['jumlah_peminjam'] }}</td>
-                  <td>Rp {{ number_format($item['barang']['harga_barang'], 0, ',', '.') }}</td>
-                  <td><img src="gambar/{{ $item['barang']['gambar_barang'] }}" class="rounded-circle" width="70px" /> </td>
+                  {{-- <td><img src="gambar/{{ $item['barang']['gambar_barang'] }}" class="rounded-circle" width="70px" /> </td> --}}
                   <td>{{ $item['tgl_peminjam'] }}</td>
+                  <td>{{ $item['tgl_kembali'] }}</td>
                   <td>
                     <span class="badge 
                         @if($item->status == 'Disetujui') bg-success 
@@ -53,25 +53,29 @@
                         {{ $item->status }}
                     </span>
                 </td>
-                <td>
-                  <div class="d-flex justify-content-start">
-                    <form action="{{ route('peminjaman.setujui', $item->id) }}" method="POST" style="margin-right: 10px;">
-                      @csrf
-                      @method('PATCH')
-                      <button class="btn btn-sm btn-success">Setujui</button>
-                    </form>
-                    <form action="{{ route('peminjaman.tolak', $item->id) }}" method="POST" style="margin-right: 10px;">
-                      @csrf
-                      @method('PATCH')
-                      <button class="btn btn-sm btn-warning">Tolak</button>
-                    </form>
-                    <form action="{{ route('peminjaman.batalkan', $item->id) }}" method="POST">
-                      @csrf
-                      @method('PATCH')
-                      <button class="btn btn-sm btn-danger">Batalkan</button>
-                    </form>                  
-                  </div>
-                </td>                
+               <td>
+  <div class="d-flex justify-content-start">
+    @if($item->status == 'Menunggu Persetujuan')
+      <form action="{{ route('peminjaman.setujui', $item->id) }}" method="POST" style="margin-right: 10px;">
+        @csrf
+        @method('PATCH')
+        <button class="btn btn-sm btn-success">Setujui</button>
+      </form>
+      <form action="{{ route('peminjaman.tolak', $item->id) }}" method="POST" style="margin-right: 10px;">
+        @csrf
+        @method('PATCH')
+        <button class="btn btn-sm btn-warning">Tolak</button>
+      </form>
+      <form action="{{ route('peminjaman.batalkan', $item->id) }}" method="POST">
+        @csrf
+        @method('PATCH')
+        <button class="btn btn-sm btn-danger">Batalkan</button>
+      </form>
+    @else
+      <span class="text-muted">Tidak ada aksi</span>
+    @endif
+  </div>
+</td>        
               </tr>
               @endforeach
             </tbody>

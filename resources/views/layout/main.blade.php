@@ -35,15 +35,23 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{{ url('barang') }}">
-            <i class="mdi mdi-cube menu-icon"></i>
-            <span class="menu-title">Barang</span>
+          <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+            <i class="mdi mdi-palette menu-icon"></i>
+            <span class="menu-title">Inventaris Barang Besar</span>
+            <i class="menu-arrow"></i>
           </a>
+          <div class="collapse" id="ui-basic">
+            <ul class="nav flex-column sub-menu">
+              <li class="nav-item"> <a class="nav-link" href="{{ url('mobiler') }}">Barang Mobiler</a></li>
+              <li class="nav-item"> <a class="nav-link" href="{{ url('elektronik') }}">Barang Elektronik</a></li>
+              <li class="nav-item"> <a class="nav-link" href="{{ url('lainnya') }}">Barang Lainnya</a></li>
+            </ul>
+          </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{{ url('rusak') }}">
-            <i class="mdi mdi-folder-remove menu-icon"></i>
-            <span class="menu-title">Detail Barang</span>
+          <a class="nav-link" href="{{ url('barang') }}">
+            <i class="mdi mdi-cube menu-icon"></i>
+            <span class="menu-title">Inventaris Barang Kecil</span>
           </a>
         </li>
         <li class="nav-item">

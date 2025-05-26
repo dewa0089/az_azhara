@@ -11,10 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('historys', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
+        Schema::create('histories', function (Blueprint $table) {
+        $table->id();
+        $table->string('jenis_kegiatan');
+        $table->date('tanggal_kegiatan');
+        $table->time('waktu_kegiatan');
+        $table->string('status');
+        $table->morphs('item'); // ini membuat kolom item_id dan item_type
+        $table->timestamps();
+    });
+
     }
 
     /**
