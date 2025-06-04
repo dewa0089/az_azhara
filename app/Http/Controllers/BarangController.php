@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Barang;
 use Illuminate\Http\Request;
+use App\Helpers\ActivityHelper;
 
 class BarangController extends Controller
 {
@@ -39,6 +40,10 @@ class BarangController extends Controller
 
         // Simpan data ke database
         Barang::create($validated);
+        
+        // simpan riwayat
+        ActivityHelper::log('Tambah Barang', 'Barang ' . $barang->nama . ' berhasil ditambahkan');
+
 
         return redirect()->route('barang.index')->with('success', 'Data Barang berhasil disimpan');
     }

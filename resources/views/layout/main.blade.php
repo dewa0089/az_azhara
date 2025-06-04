@@ -34,6 +34,7 @@
             <div class="badge badge-info badge-pill">1</div>
           </a>
         </li>
+        @if(in_array(Auth::user()->role, ['A', 'K', 'W']))
         <li class="nav-item">
           <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
             <i class="mdi mdi-palette menu-icon"></i>
@@ -48,55 +49,71 @@
             </ul>
           </div>
         </li>
+        @endif
+        @if(in_array(Auth::user()->role, ['A', 'U']))
         <li class="nav-item">
           <a class="nav-link" href="{{ url('barang') }}">
             <i class="mdi mdi-cube menu-icon"></i>
             <span class="menu-title">Inventaris Barang Kecil</span>
           </a>
         </li>
+        @endif
+        @if(in_array(Auth::user()->role, ['A', 'U']))
         <li class="nav-item">
           <a class="nav-link" href="{{ url('peminjaman') }}">
             <i class="mdi mdi-file-restore menu-icon"></i>
             <span class="menu-title">Peminjaman Barang</span>
           </a>
         </li>
+        @endif
+        @if(in_array(Auth::user()->role, ['A', 'U']))
         <li class="nav-item">
           <a class="nav-link" href="{{ url('pengembalian') }}">
             <i class="mdi mdi-grid-large menu-icon"></i>
             <span class="menu-title">Pengembalian Barang</span>
           </a>
         </li>
+        @endif
+        @if(in_array(Auth::user()->role, ['A', 'K', 'W']))
         <li class="nav-item">
           <a class="nav-link" href="{{ url('rusak') }}">
             <i class="mdi mdi-folder-remove menu-icon"></i>
             <span class="menu-title">Barang Rusak</span>
           </a>
         </li>
-        
+        @endif
+        @if(in_array(Auth::user()->role, ['A', 'K', 'W']))
         <li class="nav-item">
           <a class="nav-link" href="{{ url('pemusnaan') }}">
             <i class="mdi mdi-glassdoor menu-icon"></i>
             <span class="menu-title">Pemusnaan Barang</span>
           </a>
         </li>
+        @endif
+        
         <li class="nav-item">
           <a class="nav-link" href="{{ url('history') }}">
             <i class="mdi mdi-history menu-icon"></i>
             <span class="menu-title">Riwayat</span>
           </a>
         </li>
+
+        @if(Auth::user()->role == 'A')
         <li class="nav-item">
           <a class="nav-link" href="{{ url('user') }}">
             <i class="mdi mdi-account menu-icon"></i>
             <span class="menu-title">Manajemen User</span>
           </a>
         </li>
+        @endif
+        @if(in_array(Auth::user()->role, ['A', 'K', 'W']))
         <li class="nav-item">
           <a class="nav-link" href="{{ url('laporan') }}">
             <i class="mdi mdi-file-chart menu-icon"></i>
             <span class="menu-title">Laporan Barang</span>
           </a>
         </li>
+        @endif
       </ul>
     </nav>
     <!-- partial -->

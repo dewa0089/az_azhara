@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Laporan;
 use Illuminate\Http\Request;
+use App\Helpers\ActivityHelper;
 
 class LaporanController extends Controller
 {

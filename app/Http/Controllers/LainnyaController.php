@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Lainnya;
 use Illuminate\Http\Request;
+use App\Helpers\ActivityHelper;
 
 class LainnyaController extends Controller
 {

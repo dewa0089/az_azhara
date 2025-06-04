@@ -6,64 +6,72 @@
   <div class="col-lg-12 grid-margin stretch-card">
     <div class="card">
       <div class="card-body">
-        <h4 class="card-title">History Kegiatan</h4>
+
+        <h4 class="card-title mb-4">History Kegiatan</h4>
+
+        {{-- Filter Form --}}
+        <form method="GET" action="{{ route('history.index') }}" class="mb-4">
+          <div class="row g-2 align-items-center">
+            <div class="col-auto">
+              <label for="filter_period" class="col-form-label">Filter Periode:</label>
+            </div>
+            <div class="col-auto">
+              <select name="filter_period" id="filter_period" class="form-select">
+                <option value="">-- Semua --</option>
+                <option value="daily" {{ request('filter_period') == 'daily' ? 'selected' : '' }}>Harian</option>
+                <option value="monthly" {{ request('filter_period') == 'monthly' ? 'selected' : '' }}>Bulanan</option>
+                <option value="yearly" {{ request('filter_period') == 'yearly' ? 'selected' : '' }}>Tahunan</option>
+              </select>
+            </div>
+            <div class="col-auto">
+              <button type="submit" class="btn btn-primary">Terapkan</button>
+            </div>
+          </div>
+        </form>
+
+        {{-- Table --}}
         <div class="table-responsive">
-          <table class="table table-striped">
-            <thead>
+          <table class="table table-striped table-hover table-bordered">
+            <thead class="thead-light">
               <tr>
-                <th>
-                  No
-                </th>
-                <th>
-                  Nama Barang
-                </th>
-                <th>
-                  Kode Barang
-                </th>
-                <th>
-                  Jenis Kegiatan
-                </th>
-                <th>
-                  Tanggal Kegiatan
-                </th>
-                <th>
-                  Waktu Kegiatan
-                </th>
-                <th>
-                  Status
-                </th>
+                <th>User</th>
+                <th>Action</th>
+                <th>Description</th>
+                <th>Time</th>
               </tr>
             </thead>
             <tbody>
-              <tbody>
-@foreach($histories as $index => $history)
-<tr>
-  <td>{{ $index + 1 }}</td>
-  <td>{{ $history->item->nama_barang ?? '-' }}</td>
-  <td>{{ $history->item->kode_barang ?? '-' }}</td>
-  <td>{{ ucfirst($history->jenis_kegiatan) }}</td>
-  <td>{{ $history->tanggal_kegiatan }}</td>
-  <td>{{ $history->waktu_kegiatan }}</td>
-  <td>{{ ucfirst($history->status) }}</td>
-</tr>
-@endforeach
-</tbody>
-
-             
+              @forelse($histories as $history)
+                <tr>
+                  <td>{{ $history->user->name }}</td>
+                  <td>{{ $history->action }}</td>
+                  <td>{{ $history->description }}</td>
+                  <td>{{ $history->created_at->format('d M Y H:i') }}</td>
+                </tr>
+              @empty
+                <tr>
+                  <td colspan="4" class="text-center">Tidak ada data history.</td>
+                </tr>
+              @endforelse
             </tbody>
           </table>
         </div>
+
+        {{-- Pagination --}}
+        <div class="mt-3">
+          {{ $histories->withQueryString()->links() }}
+        </div>
+
       </div>
     </div>
   </div>
 </div>
-
 @endsection
 
 @section('scripts')
-    <script>
-        @if (Session::get('success'))
-            toastr.success("{{ Session::get('success') }}")
-        @endif
-    </script>
+<script>
+    @if (Session::has('success'))
+        toastr.success("{{ Session::get('success') }}");
+    @endif
+</script>
 @endsection

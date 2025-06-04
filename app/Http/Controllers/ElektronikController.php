@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Elektronik;
 use Illuminate\Http\Request;
+use App\Helpers\ActivityHelper;
 
 class ElektronikController extends Controller
 {
@@ -41,8 +42,11 @@ class ElektronikController extends Controller
         //     $validated['gambar_barang'] = $imageName;
         // }
 
-        // Simpan data ke database
-        Elektronik::create($validated);
+    // Simpan data ke database dan tangkap hasilnya
+    $elektronik = Elektronik::create($validated);
+
+    // simpan riwayat
+    ActivityHelper::log('Tambah Barang', 'Elektronik ' . $elektronik->nama_barang . ' berhasil ditambahkan');
 
         return redirect()->route('elektronik.index')->with('success', 'Data Barang Elektronik berhasil disimpan');
     }
