@@ -64,17 +64,31 @@ class PengembalianController extends Controller
     // Update status jadi "Disetujui"
     $pengembalian->status = 'Disetujui';
 
-    // Update stok barang berdasarkan jumlah barang baik yang dikembalikan
+    // Ambil data barang terkait
     $barang = $pengembalian->peminjaman->barang;
 
-    if ($barang && $pengembalian->jumlah_brg_baik > 0) {
-        $barang->jumlah_barang += $pengembalian->jumlah_brg_baik;
+    if ($barang) {
+        // Tambahkan jumlah barang baik ke stok
+        if ($pengembalian->jumlah_brg_baik > 0) {
+            $barang->jumlah_barang += $pengembalian->jumlah_brg_baik;
+        }
+
+        // Tambahkan jumlah barang rusak dan hilang ke properti barang
+        if ($pengembalian->jumlah_brg_rusak > 0) {
+            $barang->jumlah_rusak += $pengembalian->jumlah_brg_rusak;
+        }
+
+        if ($pengembalian->jumlah_brg_hilang > 0) {
+            $barang->jumlah_hilang += $pengembalian->jumlah_brg_hilang;
+        }
+
         $barang->save();
     }
 
     $pengembalian->save();
 
-    return redirect()->route('pengembalian.index')->with('success', 'Pengembalian disetujui dan stok barang diperbarui.');
+    return redirect()->route('pengembalian.index')->with('success', 'Pengembalian disetujui dan data barang diperbarui.');
 }
+
 
 }

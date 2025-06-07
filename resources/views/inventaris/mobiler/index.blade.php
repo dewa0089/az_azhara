@@ -15,7 +15,13 @@
               Tambah Data
             </a>
           </div>
-        </div>           
+        </div>
+         <div class="row ml-1">
+    <form action="{{ route('mobiler.index') }}" method="GET" class="d-flex">
+      <input type="text" name="search" class="form-control form-control-sm" placeholder="Cari barang..." value="{{ request('search') }}">
+      <button type="submit" class="btn btn-primary btn-sm ms-2">Cari</button>
+    </form>
+  </div>                 
         <div class="table-responsive">
           <table class="table table-striped">
             <thead>
@@ -59,41 +65,49 @@
               </tr>
             </thead>
             <tbody>
-              @foreach ($mobiler as $item)
-              <tr>
-                 <td>{{ $loop->iteration }}</td>                
-                  <td>{{ $item['kode_barang'] }}</td>
-                  <td>{{ $item['nama_barang'] }}</td>
-                  <td>{{ $item['merk'] }}</td>
-                  <td>{{ $item['type'] }}</td>
-                  {{-- <td><img src="gambar/{{ $item['gambar_barang'] }}" class="rounded-circle" width="70px" />
-                  </td> --}}
-                  <td>{{ $item['tgl_peroleh'] }}</td>
-                  <td>{{ $item['asal_usul'] }}</td>
-                  <td>{{ $item['cara_peroleh'] }}</td>
-                  <td>{{ $item['jumlah_brg'] }}</td>
-                  <td>Rp {{ number_format($item['harga_perunit'], 0, ',', '.') }}</td>
-                  <td>Rp {{ number_format($item['total_harga'], 0, ',', '.') }}</td>
-                  <td>
-                      <div class="d-flex justify-content-center">
-                        <a href="{{ route('mobiler.edit', $item->id) }}">
-                          <button class="btn btn-success btn-sm mx-3">Edit</button>
-                      </a>
-                      <form method="POST" action="{{ route('mobiler.destroy', $item->id) }}">
-                          @method('delete')
-                          @csrf
-                          <button type="submit" class="btn btn-danger btn-sm show_confirm"
-                              data-toggle="tooltip" title='Delete'
-                              data-nama='{{ $item->nama_barang }}'>Hapus Data</button>
-                      </form>
-                          </form>
-                      </div>
+              @forelse ($mobiler as $item)
+<tr>
+  <td>{{ $loop->iteration }}</td>                
+  <td>{{ $item['kode_barang'] }}</td>
+  <td>{{ $item['nama_barang'] }}</td>
+  <td>{{ $item['merk'] }}</td>
+  <td>{{ $item['type'] }}</td>
+  <td>{{ $item['tgl_peroleh'] }}</td>
+  <td>{{ $item['asal_usul'] }}</td>
+  <td>{{ $item['cara_peroleh'] }}</td>
+  <td>{{ $item['jumlah_brg'] }}</td>
+  <td>Rp {{ number_format($item['harga_perunit'], 0, ',', '.') }}</td>
+  <td>Rp {{ number_format($item['total_harga'], 0, ',', '.') }}</td>
+  @if(in_array(Auth::user()->role, ['A']))
+  <td>
+    <div class="d-flex justify-content-center">
+      <a href="{{ route('mobiler.edit', $item->id) }}">
+        <button class="btn btn-success btn-sm mx-3">Edit</button>
+      </a>
+      <form method="POST" action="{{ route('mobiler.destroy', $item->id) }}">
+        @method('delete')
+        @csrf
+        <button type="submit" class="btn btn-danger btn-sm show_confirm"
+          data-toggle="tooltip" title='Delete'
+          data-nama='{{ $item->nama_barang }}'>Hapus Data</button>
+      </form>
+    </div>
+  </td>
+  @endif
+</tr>
+@empty
+<tr>
+  <td colspan="12" class="text-center">Tidak ada data Barang Mobiler.</td>
+</tr>
+@endforelse
 
-
-                  </td>
-              </tr>
-          @endforeach
-             
+@if(count($mobiler) > 0)
+<tr>
+  <td colspan="10" class="text-end fw-bold">Total Keseluruhan</td>
+  <td class="fw-bold">Rp {{ number_format($totalHarga, 0, ',', '.') }}</td>
+  <td></td>
+</tr>
+@endif       
             </tbody>
           </table>
         </div>

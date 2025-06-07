@@ -183,18 +183,11 @@
           </button>
         </div>
         <div class="navbar-menu-wrapper navbar-search-wrapper d-none d-lg-flex align-items-center">
-          <ul class="navbar-nav mr-lg-2">
-            <li class="nav-item nav-search d-none d-lg-block">
-              <div class="input-group">
-                <input type="text" class="form-control" placeholder="Search Here..." aria-label="search" aria-describedby="search">
-              </div>
-            </li>
-          </ul>
           <ul class="navbar-nav navbar-nav-right">
             <li class="nav-item nav-profile dropdown">
-              <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+              <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown" style="color: white">
                 <img src="images/faces/face5.jpg" alt="profile"/>
-                <span class="nav-profile-name">{{ Auth::user()->name }}</span>
+                <span class="nav-profile-name" style="color: white; font-size: 18px">{{ Auth::user()->name }}</span>
               </a>
               <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
                 <a class="dropdown-item">
@@ -214,8 +207,8 @@
               </div>
             </li>
             <li class="nav-item">
-              <a href="#" class="nav-link icon-link">
-                <i class="mdi mdi-clock-outline"></i>
+              <a href="{{ url('history') }}" class="nav-link icon-link">
+                <i class="mdi mdi-clock-outline" style="color: white"></i>
               </a>
             </li>
           </ul>

@@ -8,10 +8,25 @@ use App\Helpers\ActivityHelper;
 
 class MobilerController extends Controller
 {
-     public function index()
+     public function index(Request $request)
     {
+        $search = $request->input('search');
+
+    if ($search) {
+        $mobiler = Mobiler::where('nama_barang', 'like', "%{$search}%")
+            ->orWhere('kode_barang', 'like', "%{$search}%")
+            ->orWhere('merk', 'like', "%{$search}%")
+            ->orWhere('type', 'like', "%{$search}%")
+            ->get();
+    } else {
         $mobiler = Mobiler::all();
-        return view("inventaris.mobiler.index")->with("mobiler", $mobiler);
+    }
+
+    // Hitung total harga dari data yang ditampilkan (baik semua data atau hasil pencarian)
+    $totalHarga = $mobiler->sum('total_harga');
+
+    // Pastikan $totalHarga dikirim ke view bersama $elektronik
+    return view("inventaris.mobiler.index", compact('mobiler', 'totalHarga'));
     }
 
     public function create()

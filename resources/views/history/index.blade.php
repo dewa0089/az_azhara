@@ -50,7 +50,7 @@
                 </tr>
               @empty
                 <tr>
-                  <td colspan="4" class="text-center">Tidak ada data history.</td>
+                  <td colspan="4" class="text-center">Tidak ada data Riwayat Kegiatan.</td>
                 </tr>
               @endforelse
             </tbody>

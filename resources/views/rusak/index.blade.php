@@ -34,11 +34,13 @@
                 <th>Keterangan</th>
                 <th>Harga/Unit</th>
                 <th>Status</th>
+                @if(in_array(Auth::user()->role, ['A']))
                 <th>Aksi</th>
+                @endif
               </tr>
             </thead>
             <tbody>
-@foreach($rusak as $item)
+@forelse($rusak as $item)
 @php
     $barang = $item->elektronik ?? $item->mobiler ?? $item->lainnya;
 @endphp
@@ -71,7 +73,7 @@
   </span>
 </td>
 
-
+@if(in_array(Auth::user()->role, ['A']))
    <td>
   <div class="d-flex justify-content-center">
       <!-- Tombol Delete -->
@@ -89,9 +91,14 @@
       @endif
   </div>
 </td>
+@endif
+ @empty
+  <tr>
+    <td colspan="15" class="text-center">Tidak ada data Barang Rusak.</td>
+  </tr>
 
 </tr>
-@endforeach
+@endforelse
             </tbody>
           </table>
         </div>

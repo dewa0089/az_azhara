@@ -8,11 +8,26 @@ use App\Helpers\ActivityHelper;
 
 class ElektronikController extends Controller
 {
-   public function index()
-    {
+public function index(Request $request)
+{
+    $search = $request->input('search');
+
+    if ($search) {
+        $elektronik = Elektronik::where('nama_barang', 'like', "%{$search}%")
+            ->orWhere('kode_barang', 'like', "%{$search}%")
+            ->orWhere('merk', 'like', "%{$search}%")
+            ->orWhere('type', 'like', "%{$search}%")
+            ->get();
+    } else {
         $elektronik = Elektronik::all();
-        return view("inventaris.elektronik.index")->with("elektronik", $elektronik);
     }
+     // Hitung total harga dari data yang ditampilkan (baik semua data atau hasil pencarian)
+    $totalHarga = $elektronik->sum('total_harga');
+
+    // Pastikan $totalHarga dikirim ke view bersama $elektronik
+    return view("inventaris.elektronik.index", compact('elektronik', 'totalHarga'));
+}
+
 
     public function create()
     {

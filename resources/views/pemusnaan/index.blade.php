@@ -34,7 +34,7 @@
               </tr>
             </thead>
             <tbody>
-              @foreach($pemusnaan as $item)
+              @forelse($pemusnaan as $item)
               @php
                   $barang = $item->rusak->elektronik ?? $item->rusak->mobiler ?? $item->rusak->lainnya;
               @endphp
@@ -68,7 +68,11 @@
                   <td>Rp {{ number_format(($barang->harga_perunit ?? 0) * $item->jumlah_pemusnaan, 0, ',', '.') }}</td>
                   <td>{{ $item->keterangan }}</td>
               </tr>
-              @endforeach
+               @empty
+  <tr>
+    <td colspan="16" class="text-center">Tidak ada data Pemusnaan.</td>
+  </tr>
+              @endforelse
             </tbody>
           </table>
         </div>

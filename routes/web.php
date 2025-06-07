@@ -23,19 +23,6 @@ Route::get('/', fn() => view('auth.login'));
 // Auth bawaan Laravel
 Auth::routes();
 
-// 🔐 Reset Password Custom (Verifikasi Kode)
-Route::get('password/forgot', fn() => view('auth.passwords.email'))->name('password.request');
-
-Route::post('password/email', [ResetPasswordController::class, 'sendResetCode'])->name('password.email');
-Route::post('password/resend-code', [ResetPasswordController::class, 'sendResetCode'])->name('password.resend-code');
-
-Route::get('password/verify-code', [ResetPasswordController::class, 'showVerifyCodeForm'])->name('password.verify-code.form');
-Route::post('password/verify-code', [ResetPasswordController::class, 'verifyCode'])->name('password.verify-code');
-
-Route::get('password/reset', [ResetPasswordController::class, 'showResetForm'])->name('password.reset.form');
-Route::post('password/reset', [ResetPasswordController::class, 'resetPassword'])->name('password.reset');
-
-
 // 📊 Dashboard - Hanya untuk user login (semua role)
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'checkRole:A,U,K,W'])
@@ -47,10 +34,19 @@ Route::middleware(['auth'])->group(function () {
     // 👤 Admin, Kepala Sekolah, Wakil
     Route::middleware('checkRole:A,K,W')->group(function () {
         Route::resource('user', UserController::class);
-        Route::resource('laporan', LaporanController::class);
+        Route::resource('laporan', LaporanController::class)->except(['show']);
         Route::resource('elektronik', ElektronikController::class);
         Route::resource('mobiler', MobilerController::class);
         Route::resource('lainnya', LainnyaController::class);
+        Route::get('/laporan/elektronik', [LaporanController::class, 'cetakElektronik']);
+        Route::get('/laporan/mobiler', [LaporanController::class, 'cetakMobiler']);
+        Route::get('/laporan/lainnya', [LaporanController::class, 'cetakLainnya']);
+        Route::get('/laporan/barangKecil', [LaporanController::class, 'cetakBarangKecil']);
+        Route::get('/laporan/peminjaman', [LaporanController::class, 'cetakPeminjaman']);
+        Route::get('/laporan/pengembalian', [LaporanController::class, 'cetakPengembalian']);
+        Route::get('/laporan/pemusnaan', [LaporanController::class, 'cetakPemusnaan']);
+        Route::get('/laporan/rusak', [LaporanController::class, 'cetakBarangRusak']);
+        
     });
 
     // 📦 Admin & User biasa (Peminjaman/Pengembalian)
