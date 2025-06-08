@@ -8,25 +8,24 @@ use App\Helpers\ActivityHelper;
 
 class MobilerController extends Controller
 {
-     public function index(Request $request)
+    public function index(Request $request)
     {
         $search = $request->input('search');
 
-    if ($search) {
-        $mobiler = Mobiler::where('nama_barang', 'like', "%{$search}%")
-            ->orWhere('kode_barang', 'like', "%{$search}%")
-            ->orWhere('merk', 'like', "%{$search}%")
-            ->orWhere('type', 'like', "%{$search}%")
-            ->get();
-    } else {
-        $mobiler = Mobiler::all();
-    }
+        if ($search) {
+            $mobiler = Mobiler::where('nama_barang', 'like', "%{$search}%")
+                ->orWhere('kode_barang', 'like', "%{$search}%")
+                ->orWhere('merk', 'like', "%{$search}%")
+                ->orWhere('type', 'like', "%{$search}%")
+                ->get();
+        } else {
+            $mobiler = Mobiler::all();
+        }
 
-    // Hitung total harga dari data yang ditampilkan (baik semua data atau hasil pencarian)
-    $totalHarga = $mobiler->sum('total_harga');
+        // Hitung total harga dari data yang ditampilkan
+        $totalHarga = $mobiler->sum('total_harga');
 
-    // Pastikan $totalHarga dikirim ke view bersama $elektronik
-    return view("inventaris.mobiler.index", compact('mobiler', 'totalHarga'));
+        return view("inventaris.mobiler.index", compact('mobiler', 'totalHarga'));
     }
 
     public function create()
@@ -36,7 +35,6 @@ class MobilerController extends Controller
 
     public function store(Request $request)
     {
-        // Validasi input
         $validated = $request->validate([
             'kode_barang' => 'required|unique:mobilers',
             'nama_barang' => 'required',
@@ -50,15 +48,10 @@ class MobilerController extends Controller
             'total_harga' => 'nullable|numeric',
         ]);
 
-        // Proses upload gambar jika ada
-        // if ($request->hasFile('gambar_barang')) {
-        //     $imageName = time() . '.' . $request->file('gambar_barang')->extension();
-        //     $request->file('gambar_barang')->move(public_path('gambar'), $imageName);
-        //     $validated['gambar_barang'] = $imageName;
-        // }
+        $mobiler = Mobiler::create($validated);
 
-        // Simpan data ke database
-        Mobiler::create($validated);
+        // Simpan riwayat
+        ActivityHelper::log('Tambah Barang', 'Mobiler ' . $mobiler->nama_barang . ' berhasil ditambahkan');
 
         return redirect()->route('mobiler.index')->with('success', 'Data Barang Mobiler berhasil disimpan');
     }
@@ -71,7 +64,6 @@ class MobilerController extends Controller
 
     public function update(Request $request, $id)
     {
-        // Validasi input
         $validated = $request->validate([
             'kode_barang' => 'required|unique:mobilers,kode_barang,' . $id,
             'nama_barang' => 'required',
@@ -85,22 +77,24 @@ class MobilerController extends Controller
             'total_harga' => 'nullable|numeric',
         ]);
 
-        // Proses upload gambar jika ada
-        // if ($request->hasFile('gambar_barang')) {
-        //     $imageName = time() . '.' . $request->file('gambar_barang')->extension();
-        //     $request->file('gambar_barang')->move(public_path('gambar'), $imageName);
-        //     $validated['gambar_barang'] = $imageName;
-        // }
+        $mobiler = Mobiler::find($id);
+        $mobiler->update($validated);
 
-        // Update data ke database
-        Mobiler::find($id)->update($validated);
+        // Simpan riwayat
+        ActivityHelper::log('Edit Barang', 'Mobiler ' . $mobiler->nama_barang . ' berhasil diupdate');
 
         return redirect()->route('mobiler.index')->with('success', 'Data Barang Mobiler berhasil diupdate');
     }
 
     public function destroy($id)
     {
-        Mobiler::find($id)->delete();
+        $mobiler = Mobiler::find($id);
+        $nama = $mobiler->nama_barang;
+        $mobiler->delete();
+
+        // Simpan riwayat
+        ActivityHelper::log('Hapus Barang', 'Mobiler ' . $nama . ' berhasil dihapus');
+
         return redirect()->route('mobiler.index')->with('success', 'Data Barang berhasil dihapus');
     }
 }

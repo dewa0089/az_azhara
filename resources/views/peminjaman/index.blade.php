@@ -10,11 +10,13 @@
           <div class="col">
             <h4 class="card-title">Peminjaman Barang</h4>
           </div>
+          @if(in_array(Auth::user()->role, ['U']))
           <div class="col text-end d-flex align-items-end justify-content-end">
             <a href="{{ route('peminjaman.create') }}" class="btn btn-success mdi mdi-upload btn-icon-prepend">
               Ajukan Peminjaman
             </a>
           </div>
+          @endif
         </div>       
         <div class="table-responsive">
           <table class="table table-striped">
@@ -68,11 +70,13 @@
         @method('PATCH')
         <button class="btn btn-sm btn-warning">Tolak</button>
       </form>
+      @if(in_array(Auth::user()->role, ['U']))
       <form action="{{ route('peminjaman.batalkan', $item->id) }}" method="POST">
         @csrf
         @method('PATCH')
         <button class="btn btn-sm btn-danger">Batalkan</button>
       </form>
+      @endif
     @else
       <span class="text-muted">Tidak ada aksi</span>
     @endif
@@ -95,9 +99,65 @@
 @endsection
 
 @section('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+<script>
+    @if (Session::get('success'))
+        toastr.success("{{ Session::get('success') }}")
+    @endif
+
+    @if ($errors->has('stok'))
+        toastr.error("{{ $errors->first('stok') }}")
+    @endif
+
+    // Fungsi umum untuk handle konfirmasi sweetalert pada tombol submit
+    function confirmAction(form, message) {
+        event.preventDefault(); // hentikan submit default
+        swal({
+            title: "Apakah Anda yakin?",
+            text: message,
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then((willDo) => {
+            if (willDo) {
+                form.submit();
+            }
+        });
+    }
+
+    // Tangkap klik pada tombol setujui
+    document.querySelectorAll('form button.btn-success').forEach(button => {
+        button.addEventListener('click', function(event) {
+            let form = this.closest('form');
+            confirmAction(form, "Setujui peminjaman ini?");
+        });
+    });
+
+    // Tangkap klik pada tombol tolak
+    document.querySelectorAll('form button.btn-warning').forEach(button => {
+        button.addEventListener('click', function(event) {
+            let form = this.closest('form');
+            confirmAction(form, "Tolak peminjaman ini?");
+        });
+    });
+
+    // Tangkap klik pada tombol batalkan
+    document.querySelectorAll('form button.btn-danger').forEach(button => {
+        button.addEventListener('click', function(event) {
+            let form = this.closest('form');
+            confirmAction(form, "Batalkan peminjaman ini?");
+        });
+    });
+</script>
     <script>
         @if (Session::get('success'))
             toastr.success("{{ Session::get('success') }}")
         @endif
+
+        @if ($errors->has('stok'))
+            toastr.error("{{ $errors->first('stok') }}")
+        @endif
     </script>
 @endsection
+
+

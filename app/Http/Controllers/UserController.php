@@ -38,7 +38,7 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
-        return view('user.edit', compact('barang'));
+        return view('user.edit', compact('user'));
     }
 
     public function update(Request $request, $id)
@@ -46,7 +46,7 @@ class UserController extends Controller
         // Validasi input
         $validated = $request->validate([
             'name' => 'required',
-            'email' => 'required|unique:users',
+            'email' => 'required',
             'password' => 'required',
             'role' => 'required'
         ]);

@@ -10,18 +10,19 @@ class BarangController extends Controller
 {
     public function index(Request $request)
     {
-       $search = $request->input('search');
+        $search = $request->input('search');
 
-    if ($search) {
-        $barang = Barang::where('nama_barang', 'like', "%{$search}%")
-            ->orWhere('kode_barang', 'like', "%{$search}%")
-            ->get();
-    } else {
-        $barang = Barang::all();
-    }
-    $totalHarga = $barang->sum('total_harga');
+        if ($search) {
+            $barang = Barang::where('nama_barang', 'like', "%{$search}%")
+                ->orWhere('kode_barang', 'like', "%{$search}%")
+                ->get();
+        } else {
+            $barang = Barang::all();
+        }
 
-   return view("barang.index", compact('barang', 'totalHarga'));
+        $totalHarga = $barang->sum('total_harga');
+
+        return view("barang.index", compact('barang', 'totalHarga'));
     }
 
     public function create()
@@ -30,32 +31,28 @@ class BarangController extends Controller
     }
 
     public function store(Request $request)
-{
-    // Validasi input
-    $validated = $request->validate([
-        'kode_barang' => 'required|unique:barangs',
-        'nama_barang' => 'required',
-        'jumlah_barang' => 'required',
-        'jumlah_rusak' => 'nullable',
-        'jumlah_hilang' => 'nullable',
-        'tgl_peroleh' => 'required',
-        'harga_perunit' => 'required',
-        'total_harga' => 'required',
-    ]);
+    {
+        $validated = $request->validate([
+            'kode_barang' => 'required|unique:barangs',
+            'nama_barang' => 'required',
+            'jumlah_barang' => 'required',
+            'jumlah_rusak' => 'nullable',
+            'jumlah_hilang' => 'nullable',
+            'tgl_peroleh' => 'required',
+            'harga_perunit' => 'required',
+            'total_harga' => 'required',
+        ]);
 
-    $validated['jumlah_rusak'] = $validated['jumlah_rusak'] ?? 0;
-    $validated['jumlah_hilang'] = $validated['jumlah_hilang'] ?? 0;
+        $validated['jumlah_rusak'] = $validated['jumlah_rusak'] ?? 0;
+        $validated['jumlah_hilang'] = $validated['jumlah_hilang'] ?? 0;
 
+        $barang = Barang::create($validated);
 
-    // Simpan data ke database
-    $barang = Barang::create($validated);
-    
-    // simpan riwayat
-    ActivityHelper::log('Tambah Barang', 'Barang ' . $barang->nama_barang . ' berhasil ditambahkan');
+        // Simpan riwayat aktivitas
+        ActivityHelper::log('Tambah Barang', 'Inventaris Barang Kecil ' . $barang->nama_barang . ' berhasil ditambahkan');
 
-    return redirect()->route('barang.index')->with('success', 'Data Barang berhasil disimpan');
-}
-
+        return redirect()->route('barang.index')->with('success', 'Data Barang berhasil disimpan');
+    }
 
     public function edit($id)
     {
@@ -65,7 +62,6 @@ class BarangController extends Controller
 
     public function update(Request $request, $id)
     {
-        // Validasi input
         $validated = $request->validate([
             'kode_barang' => 'required|unique:barangs,kode_barang,' . $id,
             'nama_barang' => 'required',
@@ -77,22 +73,24 @@ class BarangController extends Controller
             'total_harga' => 'required',
         ]);
 
-        // Proses upload gambar jika ada
-        // if ($request->hasFile('gambar_barang')) {
-        //     $imageName = time() . '.' . $request->file('gambar_barang')->extension();
-        //     $request->file('gambar_barang')->move(public_path('gambar'), $imageName);
-        //     $validated['gambar_barang'] = $imageName;
-        // }
+        $barang = Barang::find($id);
+        $barang->update($validated);
 
-        // Update data ke database
-        Barang::find($id)->update($validated);
+        // Simpan riwayat aktivitas
+        ActivityHelper::log('Edit Barang', 'Inventaris Barang Kecil ' . $barang->nama_barang . ' berhasil diupdate');
 
         return redirect()->route('barang.index')->with('success', 'Data Barang berhasil diupdate');
     }
 
     public function destroy($id)
     {
-        Barang::find($id)->delete();
+        $barang = Barang::find($id);
+        $nama = $barang->nama_barang;
+        $barang->delete();
+
+        // Simpan riwayat aktivitas
+        ActivityHelper::log('Hapus Barang', 'Inventaris Barang Kecil ' . $nama . ' berhasil dihapus');
+
         return redirect()->route('barang.index')->with('success', 'Data Barang berhasil dihapus');
     }
 }

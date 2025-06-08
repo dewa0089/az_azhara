@@ -48,10 +48,28 @@
                   <td>{{ $item['name'] }}</td>
                   <td>{{ $item['email'] }}</td>
                   <td>{{ $item['password'] }}</td>
-                  <td>{{ $item['role'] }}</td>
+                  <td>
+                    @switch($item['role'])
+                        @case('A')
+                            Admin
+                            @break
+                        @case('U')
+                            User
+                            @break
+                        @case('K')
+                            Kepala Sekolah
+                            @break
+                        @case('W')
+                            Wakil Kepala Sekolah
+                            @break
+                        @default
+                            Tidak Diketahui
+                    @endswitch
+                  </td>
+
                   <td>
                       <div class="d-flex justify-content-center">
-                        <a href="{{ route('barang.edit', $item->id) }}">
+                        <a href="{{ route('user.edit', $item->id) }}">
                           <button class="btn btn-success btn-sm mx-3">Edit</button>
                       </a>
                       <form method="POST" action="{{ route('user.destroy', $item->id) }}">
@@ -59,7 +77,7 @@
                           @csrf
                           <button type="submit" class="btn btn-danger btn-sm show_confirm"
                               data-toggle="tooltip" title='Delete'
-                              data-nama='{{ $item->nama_barang }}'>Hapus Data</button>
+                              data-nama='{{ $item->name }}'>Hapus Data</button>
                       </form>
                           </form>
                       </div>

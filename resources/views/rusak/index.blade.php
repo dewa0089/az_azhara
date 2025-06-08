@@ -74,24 +74,27 @@
 </td>
 
 @if(in_array(Auth::user()->role, ['A']))
-   <td>
+<td>
   <div class="d-flex justify-content-center">
-      <!-- Tombol Delete -->
-      <form action="{{ route('rusak.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus barang rusak ini?')">
-          @csrf
-          @method('DELETE')
-          <button class="btn btn-danger btn-sm mx-1">Delete</button>
-      </form>
-
-      <!-- Tombol Lakukan Pemusnaan -->
       @if ($item->status == 'Rusak')
+          <!-- Tombol Lakukan Pemusnaan -->
           <a href="{{ route('pemusnaan.create', ['rusak_id' => $item->id]) }}" class="btn btn-warning btn-sm mx-1">
               Lakukan Pemusnaan
           </a>
+          <!-- Tombol Delete -->
+          <form method="POST" action="{{ route('rusak.destroy', $item->id) }}">
+              @method('delete')
+              @csrf
+              <button type="submit" class="btn btn-danger btn-sm show_confirm"
+                      data-toggle="tooltip" title='Delete'
+                      data-nama='{{ $barang->nama_barang }}'>Hapus Data</button>
+          </form>
       @endif
   </div>
 </td>
+
 @endif
+
  @empty
   <tr>
     <td colspan="15" class="text-center">Tidak ada data Barang Rusak.</td>
