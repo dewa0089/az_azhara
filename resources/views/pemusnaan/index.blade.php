@@ -8,7 +8,7 @@
       <div class="card-body">
         <div class="row mb-1">
           <div class="col">
-            <h4 class="card-title">Pemusnaan Barang</h4>
+            <h4 class="card-title">Pemusnahan Barang</h4>
           </div>
         </div>      
         <div class="table-responsive">

@@ -8,25 +8,23 @@ use App\Helpers\ActivityHelper;
 
 class LainnyaController extends Controller
 {
-     public function index(Request $request)
+    public function index(Request $request)
     {
-       $search = $request->input('search');
+        $search = $request->input('search');
 
-    if ($search) {
-        $lainnya = Lainnya::where('nama_barang', 'like', "%{$search}%")
-            ->orWhere('kode_barang', 'like', "%{$search}%")
-            ->orWhere('merk', 'like', "%{$search}%")
-            ->orWhere('type', 'like', "%{$search}%")
-            ->get();
-    } else {
-        $lainnya = Lainnya::all();
-    }
+        if ($search) {
+            $lainnya = Lainnya::where('nama_barang', 'like', "%{$search}%")
+                ->orWhere('kode_barang', 'like', "%{$search}%")
+                ->orWhere('merk', 'like', "%{$search}%")
+                ->orWhere('type', 'like', "%{$search}%")
+                ->get();
+        } else {
+            $lainnya = Lainnya::all();
+        }
 
-    // Hitung total harga dari data yang ditampilkan (baik semua data atau hasil pencarian)
-    $totalHarga = $lainnya->sum('total_harga');
+        $totalHarga = $lainnya->sum('total_harga');
 
-    // Pastikan $totalHarga dikirim ke view bersama $elektronik
-    return view("inventaris.lainnya.index", compact('lainnya', 'totalHarga'));
+        return view("inventaris.lainnya.index", compact('lainnya', 'totalHarga'));
     }
 
     public function create()
@@ -36,7 +34,6 @@ class LainnyaController extends Controller
 
     public function store(Request $request)
     {
-        // Validasi input
         $validated = $request->validate([
             'nama_barang' => 'required',
             'merk' => 'required',
@@ -49,15 +46,10 @@ class LainnyaController extends Controller
             'total_harga' => 'nullable|numeric',
         ]);
 
-        // Proses upload gambar jika ada
-        // if ($request->hasFile('gambar_barang')) {
-        //     $imageName = time() . '.' . $request->file('gambar_barang')->extension();
-        //     $request->file('gambar_barang')->move(public_path('gambar'), $imageName);
-        //     $validated['gambar_barang'] = $imageName;
-        // }
+        $lainnya = Lainnya::create($validated);
 
-        // Simpan data ke database
-        Lainnya::create($validated);
+        // Simpan riwayat aktivitas
+        ActivityHelper::log('Tambah Barang', 'Barang lainnya ' . $lainnya->nama_barang . ' berhasil ditambahkan');
 
         return redirect()->route('lainnya.index')->with('success', 'Data Barang Lainnya berhasil disimpan');
     }
@@ -70,9 +62,8 @@ class LainnyaController extends Controller
 
     public function update(Request $request, $id)
     {
-        // Validasi input
         $validated = $request->validate([
-            'nama_barang' => 'required'.$id,
+            'nama_barang' => 'required',
             'merk' => 'required',
             'type' => 'required',
             'tgl_peroleh' => 'required',
@@ -83,22 +74,30 @@ class LainnyaController extends Controller
             'total_harga' => 'nullable|numeric',
         ]);
 
-        // Proses upload gambar jika ada
         if ($request->hasFile('gambar_barang')) {
             $imageName = time() . '.' . $request->file('gambar_barang')->extension();
             $request->file('gambar_barang')->move(public_path('gambar'), $imageName);
             $validated['gambar_barang'] = $imageName;
         }
 
-        // Update data ke database
-        Lainnya::find($id)->update($validated);
+        $lainnya = Lainnya::find($id);
+        $lainnya->update($validated);
+
+        // Simpan riwayat aktivitas
+        ActivityHelper::log('Edit Barang', 'Barang lainnya ' . $lainnya->nama_barang . ' berhasil diupdate');
 
         return redirect()->route('lainnya.index')->with('success', 'Data Barang Lainnya berhasil diupdate');
     }
 
     public function destroy($id)
     {
-        Lainnya::find($id)->delete();
+        $lainnya = Lainnya::find($id);
+        $nama = $lainnya->nama_barang;
+        $lainnya->delete();
+
+        // Simpan riwayat aktivitas
+        ActivityHelper::log('Hapus Barang', 'Barang lainnya ' . $nama . ' berhasil dihapus');
+
         return redirect()->route('lainnya.index')->with('success', 'Data Barang Lainnya berhasil dihapus');
     }
 }

@@ -25,7 +25,7 @@ class HistorieController extends Controller
         }
 
         $histories = $query->orderBy('created_at', 'desc')
-                           ->paginate(20)
+                           ->paginate(10)
                            ->appends(['filter_period' => $filter]); // agar filter tetap di url saat pagination
 
         return view('history.index', compact('histories'));
