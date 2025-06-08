@@ -50,7 +50,7 @@
           </div>
         </li>
         @endif
-        @if(in_array(Auth::user()->role, ['A', 'U']))
+        @if(in_array(Auth::user()->role, ['A']))
         <li class="nav-item">
           <a class="nav-link" href="{{ url('barang') }}">
             <i class="mdi mdi-cube menu-icon"></i>
