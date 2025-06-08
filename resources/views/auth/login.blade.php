@@ -51,20 +51,6 @@
                 </div>
               </div>
 
-
-              <div class="my-2 d-flex justify-content-between align-items-center">
-                <div class="form-check">
-                  <label class="form-check-label text-muted" for="remember">
-                    <input type="checkbox" class="form-check-input" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-                    {{ __('Keep me signed in') }}
-                  </label>
-                </div>
-               
-                @if (Route::has('password.request'))
-                <a href="{{ route('password.request') }}" class="auth-link"> {{ __('Forgot Your Password?') }}</a>
-                @endif
-              </div>
-
                         <div class="mt-3">
                           <button class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn" type="submit" class="btn btn-primary">
                             {{ __('Login') }}

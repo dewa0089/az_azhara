@@ -26,11 +26,13 @@
                 <th>Jumlah Barang Hilang</th>
                 <th>Tanggal Pengembalian</th>
                 <th>Status</th>
+                @if(in_array(Auth::user()->role, ['A']))
                 <th>Aksi</th>
+                @endif
               </tr>
             </thead>
             <tbody>
-              @foreach ($pengembalian as $item)
+              @forelse ($pengembalian as $item)
               <tr>
                 <td>{{ $loop->iteration }}</td>                
                 <td>{{ $item->peminjaman->nama_peminjam }}</td>
@@ -52,7 +54,7 @@
                   {{ $item->status }}
                 </span>
                 </td>
-
+                @if(in_array(Auth::user()->role, ['A']))
                 <td>
               <div class="d-flex justify-content-center">
                   @if ($item->status == 'Belum Dikembalikan') 
@@ -70,9 +72,14 @@
                   @endif
               </div>
               </td>
+              @endif
+               @empty
+  <tr>
+    <td colspan="12" class="text-center">Tidak ada data Pengembalian.</td>
+  </tr>
                        
               </tr>
-              @endforeach
+              @endforelse
             </tbody>
           </table>
         </div>

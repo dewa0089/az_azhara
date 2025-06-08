@@ -4,13 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Models\Barang;
 use Illuminate\Http\Request;
+use App\Helpers\ActivityHelper;
 
 class BarangController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+       $search = $request->input('search');
+
+    if ($search) {
+        $barang = Barang::where('nama_barang', 'like', "%{$search}%")
+            ->orWhere('kode_barang', 'like', "%{$search}%")
+            ->get();
+    } else {
         $barang = Barang::all();
-        return view("barang.index")->with("barang", $barang);
+    }
+    $totalHarga = $barang->sum('total_harga');
+
+   return view("barang.index", compact('barang', 'totalHarga'));
     }
 
     public function create()
@@ -19,29 +30,32 @@ class BarangController extends Controller
     }
 
     public function store(Request $request)
-    {
-        // Validasi input
-        $validated = $request->validate([
-            'kode_barang' => 'required|unique:barangs',
-            'nama_barang' => 'required',
-            'jumlah_barang' => 'required',
-            'tgl_peroleh' => 'required',
-            'harga_perunit' => 'required',
-            'total_harga' => 'required',
-        ]);
+{
+    // Validasi input
+    $validated = $request->validate([
+        'kode_barang' => 'required|unique:barangs',
+        'nama_barang' => 'required',
+        'jumlah_barang' => 'required',
+        'jumlah_rusak' => 'nullable',
+        'jumlah_hilang' => 'nullable',
+        'tgl_peroleh' => 'required',
+        'harga_perunit' => 'required',
+        'total_harga' => 'required',
+    ]);
 
-        // Proses upload gambar jika ada
-        // if ($request->hasFile('gambar_barang')) {
-        //     $imageName = time() . '.' . $request->file('gambar_barang')->extension();
-        //     $request->file('gambar_barang')->move(public_path('gambar'), $imageName);
-        //     $validated['gambar_barang'] = $imageName;
-        // }
+    $validated['jumlah_rusak'] = $validated['jumlah_rusak'] ?? 0;
+    $validated['jumlah_hilang'] = $validated['jumlah_hilang'] ?? 0;
 
-        // Simpan data ke database
-        Barang::create($validated);
 
-        return redirect()->route('barang.index')->with('success', 'Data Barang berhasil disimpan');
-    }
+    // Simpan data ke database
+    $barang = Barang::create($validated);
+    
+    // simpan riwayat
+    ActivityHelper::log('Tambah Barang', 'Barang ' . $barang->nama_barang . ' berhasil ditambahkan');
+
+    return redirect()->route('barang.index')->with('success', 'Data Barang berhasil disimpan');
+}
+
 
     public function edit($id)
     {
@@ -56,6 +70,8 @@ class BarangController extends Controller
             'kode_barang' => 'required|unique:barangs,kode_barang,' . $id,
             'nama_barang' => 'required',
             'jumlah_barang' => 'required',
+            'jumlah_rusak' => 'nullable',
+            'jumlah_hilang' => 'nullable',
             'tgl_peroleh' => 'required',
             'harga_perunit' => 'required',
             'total_harga' => 'required',

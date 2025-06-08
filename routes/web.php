@@ -1,75 +1,85 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\{
+    BarangController,
+    RusakController,
+    PeminjamanController,
+    PengembalianController,
+    PemusnaanController,
+    UserController,
+    HistorieController,
+    LaporanController,
+    DashboardController,
+    ElektronikController,
+    MobilerController,
+    LainnyaController
+};
+use App\Http\Controllers\Auth\ResetPasswordController;
 
-// Import semua controller yang dibutuhkan
-use App\Http\Controllers\BarangController;
-use App\Http\Controllers\RusakController;
-use App\Http\Controllers\PeminjamanController;
-use App\Http\Controllers\PengembalianController;
-use App\Http\Controllers\PemusnaanController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\HistoryController;
-use App\Http\Controllers\LaporanController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ElektronikController;
-use App\Http\Controllers\MobilerController;
-use App\Http\Controllers\LainnyaController;
+// Halaman login awal
+Route::get('/', fn() => view('auth.login'));
 
-// Route halaman login awal (guest)
-Route::get('/', function () {
-    return view('auth.login');
-});
-
-// Group route yang harus login (middleware auth)
-Route::middleware(['auth'])->group(function () {
-
-    // Resource controller standar
-    Route::resource('barang', BarangController::class);
-    Route::resource('peminjaman', PeminjamanController::class);
-    Route::resource('rusak', RusakController::class);
-    Route::resource('pemusnaan', PemusnaanController::class);
-    Route::resource('user', UserController::class);
-    Route::resource('history', HistoryController::class);
-    Route::resource('laporan', LaporanController::class);
-    Route::resource('elektronik', ElektronikController::class);
-    Route::resource('lainnya', LainnyaController::class);
-    Route::resource('mobiler', MobilerController::class);
-
-    // **PengembalianController: khusus route create dengan parameter id**
-    // Harus didefinisikan dulu agar tidak tertimpa oleh resource route
-    Route::get('/pengembalian/create/{id}', [PengembalianController::class, 'create'])->name('pengembalian.create.id');
-
-    // Resource controller untuk pengembalian
-    Route::resource('pengembalian', PengembalianController::class)->except(['create']);
-
-    // Route khusus untuk aksi setujui pengembalian, method PUT/PATCH
-    Route::put('/pengembalian/setujui/{id}', [PengembalianController::class, 'setujui'])->name('pengembalian.setujui');
-
-    // Route khusus aksi persetujuan peminjaman
-    Route::patch('/peminjaman/{id}/setujui', [PeminjamanController::class, 'setujui'])->name('peminjaman.setujui');
-    Route::patch('/peminjaman/{id}/tolak', [PeminjamanController::class, 'tolak'])->name('peminjaman.tolak');
-    Route::patch('/peminjaman/{id}/batalkan', [PeminjamanController::class, 'batalkan'])->name('peminjaman.batalkan');
-
-
-    Route::put('/rusak/{id}/ajukan-pemusnahan', [RusakController::class, 'ajukanPemusnahan'])->name('rusak.ajukanPemusnahan');
-
-    Route::put('/pemusnaan/{id}/laksanakan', [PemusnaanController::class, 'laksanakan'])->name('pemusnaan.laksanakan');
-
-    // Untuk tampilkan form pemusnahan
-Route::get('/pemusnaan/create', [PemusnaanController::class, 'create'])->name('pemusnaan.create');
-
-// Untuk menyimpan data pemusnahan
-Route::post('/pemusnaan/store', [PemusnaanController::class, 'store'])->name('pemusnaan.store');
-
-
-
-});
-
-// Auth routes (login, register, etc)
+// Auth bawaan Laravel
 Auth::routes();
 
-// Dashboard route, hanya bisa diakses oleh role tertentu
+// 📊 Dashboard - Hanya untuk user login (semua role)
 Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware(['checkRole:A,U'])
+    ->middleware(['auth', 'checkRole:A,U,K,W'])
     ->name('dashboard');
+
+// Semua route di bawah hanya untuk user yang sudah login
+Route::middleware(['auth'])->group(function () {
+
+    // 👤 Admin, Kepala Sekolah, Wakil
+    Route::middleware('checkRole:A,K,W')->group(function () {
+        Route::resource('user', UserController::class);
+        Route::resource('laporan', LaporanController::class)->except(['show']);
+        Route::resource('elektronik', ElektronikController::class);
+        Route::resource('mobiler', MobilerController::class);
+        Route::resource('lainnya', LainnyaController::class);
+        Route::get('/laporan/elektronik', [LaporanController::class, 'cetakElektronik']);
+        Route::get('/laporan/mobiler', [LaporanController::class, 'cetakMobiler']);
+        Route::get('/laporan/lainnya', [LaporanController::class, 'cetakLainnya']);
+        Route::get('/laporan/barangKecil', [LaporanController::class, 'cetakBarangKecil']);
+        Route::get('/laporan/peminjaman', [LaporanController::class, 'cetakPeminjaman']);
+        Route::get('/laporan/pengembalian', [LaporanController::class, 'cetakPengembalian']);
+        Route::get('/laporan/pemusnaan', [LaporanController::class, 'cetakPemusnaan']);
+        Route::get('/laporan/rusak', [LaporanController::class, 'cetakBarangRusak']);
+        
+    });
+
+    // 📦 Admin & User biasa (Peminjaman/Pengembalian)
+    Route::middleware('checkRole:A,U')->group(function () {
+        Route::resource('barang', BarangController::class);
+        Route::resource('peminjaman', PeminjamanController::class);
+        Route::resource('pengembalian', PengembalianController::class)->except(['create']);
+        Route::get('/pengembalian/create/{id}', [PengembalianController::class, 'create'])->name('pengembalian.create.id');
+    });
+
+    // ✅ Otorisasi Peminjaman/Pengembalian oleh Kepala/Wakil/Admin
+    Route::middleware('checkRole:A,K,W')->group(function () {
+        Route::patch('/peminjaman/{id}/setujui', [PeminjamanController::class, 'setujui'])->name('peminjaman.setujui');
+        Route::patch('/peminjaman/{id}/tolak', [PeminjamanController::class, 'tolak'])->name('peminjaman.tolak');
+        Route::put('/pengembalian/setujui/{id}', [PengembalianController::class, 'setujui'])->name('pengembalian.setujui');
+    });
+
+    // ⚠️ Barang Rusak & Pemusnahan
+    Route::middleware('checkRole:A,K,W')->group(function () {
+        Route::resource('rusak', RusakController::class);
+        Route::put('/rusak/{id}/ajukan-pemusnahan', [RusakController::class, 'ajukanPemusnahan'])->name('rusak.ajukanPemusnahan');
+
+        Route::resource('pemusnaan', PemusnaanController::class);
+        Route::put('/pemusnaan/{id}/laksanakan', [PemusnaanController::class, 'laksanakan'])->name('pemusnaan.laksanakan');
+        Route::get('/pemusnaan/create', [PemusnaanController::class, 'create'])->name('pemusnaan.create');
+        Route::post('/pemusnaan/store', [PemusnaanController::class, 'store'])->name('pemusnaan.store');
+    });
+
+    // 🕓 Riwayat
+    Route::middleware('checkRole:A,U,K,W')->group(function () {
+        Route::resource('history', HistorieController::class);
+    });
+
+    // ❌ Peminjam bisa batalkan peminjaman
+    Route::patch('/peminjaman/{id}/batalkan', [PeminjamanController::class, 'batalkan'])->name('peminjaman.batalkan');
+});

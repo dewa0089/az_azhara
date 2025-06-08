@@ -7,6 +7,7 @@ use App\Models\Elektronik;
 use App\Models\Mobiler;
 use App\Models\Lainnya;
 use Illuminate\Http\Request;
+use App\Helpers\ActivityHelper;
 
 class RusakController extends Controller
 {

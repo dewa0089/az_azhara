@@ -20934,7 +20934,7 @@ dl li {
 }
 
 .navbar .navbar-menu-wrapper.navbar-search-wrapper {
-  background: #ffffff;
+  background: transparent;
   height: 65px;
 }
 

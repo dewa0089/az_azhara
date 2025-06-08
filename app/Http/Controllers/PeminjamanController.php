@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use App\Models\Peminjaman;
 use App\Models\Pengembalian;
 use App\Models\Barang;
+use App\Helpers\ActivityHelper;
 
 class PeminjamanController extends Controller
 {

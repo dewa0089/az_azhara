@@ -2,25 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
-class History extends Model
+class Historie extends Model
 {
-    use HasFactory;
+    protected $fillable = ['user_id', 'action', 'description'];
 
-    protected $fillable = [
-        'jenis_kegiatan', 
-        'tanggal_kegiatan', 
-        'waktu_kegiatan', 
-        'status', 
-        'item_id', 
-        'item_type'
-    ];
-
-    public function item()
+    public function user()
     {
-        return $this->morphTo();
+        return $this->belongsTo(User::class);
     }
 }
+

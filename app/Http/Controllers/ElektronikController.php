@@ -4,14 +4,30 @@ namespace App\Http\Controllers;
 
 use App\Models\Elektronik;
 use Illuminate\Http\Request;
+use App\Helpers\ActivityHelper;
 
 class ElektronikController extends Controller
 {
-   public function index()
-    {
+public function index(Request $request)
+{
+    $search = $request->input('search');
+
+    if ($search) {
+        $elektronik = Elektronik::where('nama_barang', 'like', "%{$search}%")
+            ->orWhere('kode_barang', 'like', "%{$search}%")
+            ->orWhere('merk', 'like', "%{$search}%")
+            ->orWhere('type', 'like', "%{$search}%")
+            ->get();
+    } else {
         $elektronik = Elektronik::all();
-        return view("inventaris.elektronik.index")->with("elektronik", $elektronik);
     }
+     // Hitung total harga dari data yang ditampilkan (baik semua data atau hasil pencarian)
+    $totalHarga = $elektronik->sum('total_harga');
+
+    // Pastikan $totalHarga dikirim ke view bersama $elektronik
+    return view("inventaris.elektronik.index", compact('elektronik', 'totalHarga'));
+}
+
 
     public function create()
     {
@@ -41,8 +57,11 @@ class ElektronikController extends Controller
         //     $validated['gambar_barang'] = $imageName;
         // }
 
-        // Simpan data ke database
-        Elektronik::create($validated);
+    // Simpan data ke database dan tangkap hasilnya
+    $elektronik = Elektronik::create($validated);
+
+    // simpan riwayat
+    ActivityHelper::log('Tambah Barang', 'Elektronik ' . $elektronik->nama_barang . ' berhasil ditambahkan');
 
         return redirect()->route('elektronik.index')->with('success', 'Data Barang Elektronik berhasil disimpan');
     }

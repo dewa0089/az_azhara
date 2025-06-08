@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Pemusnaan;
 use App\Models\Rusak;
 use Illuminate\Http\Request;
+use App\Helpers\ActivityHelper;
 
 class PemusnaanController extends Controller
 {

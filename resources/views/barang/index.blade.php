@@ -15,7 +15,13 @@
               Tambah Data
             </a>
           </div>
-        </div>           
+        </div> 
+         <div class="row ml-1">
+    <form action="{{ route('barang.index') }}" method="GET" class="d-flex">
+      <input type="text" name="search" class="form-control form-control-sm" placeholder="Cari barang..." value="{{ request('search') }}">
+      <button type="submit" class="btn btn-primary btn-sm ms-2">Cari</button>
+    </form>
+  </div>                
         <div class="table-responsive">
           <table class="table table-striped">
             <thead>
@@ -24,40 +30,58 @@
                 <th>Kode Barang</th>
                 <th>Nama Barang</th>
                 <th>Jumlah Barang</th>
+                <th>Jumlah Barang Rusak</th>
+                <th>Jumlah Barang Hilang</th>
                 <th>Tanggal Peroleh</th>
                 <th>Harga Per Unit</th>
                 <th>Total Harga</th>
+                @if(in_array(Auth::user()->role, ['A']))
                 <th>Aksi</th>
+                @endif
               </tr>
             </thead>
             <tbody>
-              @foreach ($barang as $item)
-              <tr>
-                <td>{{ $loop->iteration }}</td>                
-                <td>{{ $item['kode_barang'] }}</td>
-                <td>{{ $item['nama_barang'] }}</td>
-                <td>{{ $item['jumlah_barang'] }}</td>
-                <td>{{ $item['tgl_peroleh'] }}</td>
-                <td>Rp {{ number_format($item['harga_perunit'], 0, ',', '.') }}</td>
-                {{-- Hitung total harga langsung di blade --}}
-                <td>Rp {{ number_format($item['jumlah_barang'] * $item['harga_perunit'], 0, ',', '.') }}</td>
-                <td>
-                  <div class="d-flex justify-content-center">
-                    <a href="{{ route('barang.edit', $item->id) }}">
-                      <button class="btn btn-success btn-sm mx-3">Edit</button>
-                    </a>
-                    <form method="POST" action="{{ route('barang.destroy', $item->id) }}">
-                      @method('delete')
-                      @csrf
-                      <button type="submit" class="btn btn-danger btn-sm show_confirm"
-                              data-toggle="tooltip" title='Delete'
-                              data-nama='{{ $item->nama_barang }}'>Hapus Data</button>
-                    </form>
-                  </div>
-                </td>
-              </tr>
-              @endforeach
-            </tbody>
+@forelse ($barang as $item)
+<tr>
+  <td>{{ $loop->iteration }}</td>                
+  <td>{{ $item['kode_barang'] }}</td>
+  <td>{{ $item['nama_barang'] }}</td>
+  <td>{{ $item['jumlah_barang'] }}</td>
+  <td>{{ $item['jumlah_rusak'] }}</td>
+  <td>{{ $item['jumlah_hilang'] }}</td>
+  <td>{{ $item['tgl_peroleh'] }}</td>
+  <td>Rp {{ number_format($item['harga_perunit'], 0, ',', '.') }}</td>
+  <td>Rp {{ number_format($item['jumlah_barang'] * $item['harga_perunit'], 0, ',', '.') }}</td>
+  @if(in_array(Auth::user()->role, ['A']))
+  <td>
+    <div class="d-flex justify-content-center">
+      <a href="{{ route('barang.edit', $item->id) }}">
+        <button class="btn btn-success btn-sm mx-3">Edit</button>
+      </a>
+      <form method="POST" action="{{ route('barang.destroy', $item->id) }}">
+        @method('delete')
+        @csrf
+        <button type="submit" class="btn btn-danger btn-sm show_confirm"
+                data-toggle="tooltip" title='Delete'
+                data-nama='{{ $item->nama_barang }}'>Hapus Data</button>
+      </form>
+    </div>
+  </td>
+  @endif
+</tr>
+@empty
+<tr>
+  <td colspan="10" class="text-center">Tidak ada data Barang.</td>
+</tr>
+@endforelse
+@if(count($barang) > 0)
+<tr>
+  <td colspan="8" class="text-end fw-bold">Total Keseluruhan</td>
+  <td class="fw-bold">Rp {{ number_format($totalHarga, 0, ',', '.') }}</td>
+  <td></td>
+</tr>
+@endif
+</tbody>
           </table>
         </div>
       </div>

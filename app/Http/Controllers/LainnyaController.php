@@ -4,13 +4,29 @@ namespace App\Http\Controllers;
 
 use App\Models\Lainnya;
 use Illuminate\Http\Request;
+use App\Helpers\ActivityHelper;
 
 class LainnyaController extends Controller
 {
-     public function index()
+     public function index(Request $request)
     {
+       $search = $request->input('search');
+
+    if ($search) {
+        $lainnya = Lainnya::where('nama_barang', 'like', "%{$search}%")
+            ->orWhere('kode_barang', 'like', "%{$search}%")
+            ->orWhere('merk', 'like', "%{$search}%")
+            ->orWhere('type', 'like', "%{$search}%")
+            ->get();
+    } else {
         $lainnya = Lainnya::all();
-        return view("inventaris.lainnya.index")->with("lainnya", $lainnya);
+    }
+
+    // Hitung total harga dari data yang ditampilkan (baik semua data atau hasil pencarian)
+    $totalHarga = $lainnya->sum('total_harga');
+
+    // Pastikan $totalHarga dikirim ke view bersama $elektronik
+    return view("inventaris.lainnya.index", compact('lainnya', 'totalHarga'));
     }
 
     public function create()

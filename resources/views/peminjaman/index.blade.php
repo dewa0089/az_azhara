@@ -25,15 +25,16 @@
                 <th>Kode Barang</th>
                 <th>Nama Barang</th>
                 <th>Jumlah Peminjaman</th>
-                {{-- <th>Gambar Barang</th> --}}
                 <th>Tanggal Peminjaman</th>
                 <th>Tanggal Batas Pengembalian</th>
                 <th>Status</th>
+                @if(in_array(Auth::user()->role, ['A']))
                 <th>Aksi</th>
+                @endif
               </tr>
             </thead>
             <tbody>
-              @foreach ($peminjaman as $item)
+              @forelse ($peminjaman as $item)
               <tr>
                  <td>{{ $loop->iteration }}</td>                
                   <td>{{ $item['nama_peminjam'] }}</td>
@@ -53,6 +54,7 @@
                         {{ $item->status }}
                     </span>
                 </td>
+                @if(in_array(Auth::user()->role, ['A']))
                <td>
   <div class="d-flex justify-content-start">
     @if($item->status == 'Menunggu Persetujuan')
@@ -75,9 +77,14 @@
       <span class="text-muted">Tidak ada aksi</span>
     @endif
   </div>
-</td>        
+</td>    
+@endif    
               </tr>
-              @endforeach
+              @empty
+  <tr>
+    <td colspan="9" class="text-center">Tidak ada data Peminjaman.</td>
+  </tr>
+              @endforelse
             </tbody>
           </table>
         </div>

@@ -202,32 +202,8 @@ $(function() {
     });
   }
 
-  if ($("#doughnutChart").length) {
-    var doughnutChartCanvas = $("#doughnutChart").get(0).getContext("2d");
-    var doughnutChart = new Chart(doughnutChartCanvas, {
-      type: 'doughnut',
-      data: doughnutPieData,
-      options: doughnutPieOptions
-    });
-  }
+  
 
-  if ($("#pieChart").length) {
-    var pieChartCanvas = $("#pieChart").get(0).getContext("2d");
-    var pieChart = new Chart(pieChartCanvas, {
-      type: 'pie',
-      data: doughnutPieData,
-      options: doughnutPieOptions
-    });
-  }
-
-  if ($("#areaChart").length) {
-    var areaChartCanvas = $("#areaChart").get(0).getContext("2d");
-    var areaChart = new Chart(areaChartCanvas, {
-      type: 'line',
-      data: areaData,
-      options: areaOptions
-    });
-  }
 
   if ($("#scatterChart").length) {
     var scatterChartCanvas = $("#scatterChart").get(0).getContext("2d");
