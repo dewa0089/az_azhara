@@ -57,6 +57,12 @@
                         @error('tgl_pengembalian')
                             <label class="text-danger">{{ $message }}</label>
                         @enderror
+
+                        @if ($errors->has('total_pengembalian'))
+    <div class="alert alert-danger mt-2">
+        {{ $errors->first('total_pengembalian') }}
+    </div>
+@endif
                     </div>
 
                     <button type="submit" class="btn btn-primary mr-2">Simpan</button>

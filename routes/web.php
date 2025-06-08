@@ -17,27 +17,23 @@ use App\Http\Controllers\{
 };
 use App\Http\Controllers\Auth\ResetPasswordController;
 
-// Halaman login awal
 Route::get('/', fn() => view('auth.login'));
 
-// Auth bawaan Laravel
 Auth::routes();
 
-// 📊 Dashboard - Hanya untuk user login (semua role)
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'checkRole:A,U,K,W'])
     ->name('dashboard');
 
-// Semua route di bawah hanya untuk user yang sudah login
+
 Route::middleware(['auth'])->group(function () {
 
-    // 👤 Admin, Kepala Sekolah, Wakil
+
     Route::middleware('checkRole:A,K,W')->group(function () {
-        Route::resource('user', UserController::class);
-        Route::resource('laporan', LaporanController::class)->except(['show']);
         Route::resource('elektronik', ElektronikController::class);
         Route::resource('mobiler', MobilerController::class);
         Route::resource('lainnya', LainnyaController::class);
+        Route::resource('laporan', LaporanController::class)->except(['show']);
         Route::get('/laporan/elektronik', [LaporanController::class, 'cetakElektronik']);
         Route::get('/laporan/mobiler', [LaporanController::class, 'cetakMobiler']);
         Route::get('/laporan/lainnya', [LaporanController::class, 'cetakLainnya']);
@@ -49,37 +45,31 @@ Route::middleware(['auth'])->group(function () {
         
     });
 
-    // 📦 Admin & User biasa (Peminjaman/Pengembalian)
+
     Route::middleware('checkRole:A,U')->group(function () {
         Route::resource('barang', BarangController::class);
         Route::resource('peminjaman', PeminjamanController::class);
         Route::resource('pengembalian', PengembalianController::class)->except(['create']);
         Route::get('/pengembalian/create/{id}', [PengembalianController::class, 'create'])->name('pengembalian.create.id');
+        Route::patch('/peminjaman/{id}/batalkan', [PeminjamanController::class, 'batalkan'])->name('peminjaman.batalkan');
     });
 
-    // ✅ Otorisasi Peminjaman/Pengembalian oleh Kepala/Wakil/Admin
-    Route::middleware('checkRole:A,K,W')->group(function () {
+
+    Route::middleware('checkRole:A')->group(function () {
+        Route::resource('user', UserController::class);
+        Route::resource('rusak', RusakController::class);
+        Route::resource('pemusnaan', PemusnaanController::class);
         Route::patch('/peminjaman/{id}/setujui', [PeminjamanController::class, 'setujui'])->name('peminjaman.setujui');
         Route::patch('/peminjaman/{id}/tolak', [PeminjamanController::class, 'tolak'])->name('peminjaman.tolak');
         Route::put('/pengembalian/setujui/{id}', [PengembalianController::class, 'setujui'])->name('pengembalian.setujui');
-    });
-
-    // ⚠️ Barang Rusak & Pemusnahan
-    Route::middleware('checkRole:A,K,W')->group(function () {
-        Route::resource('rusak', RusakController::class);
         Route::put('/rusak/{id}/ajukan-pemusnahan', [RusakController::class, 'ajukanPemusnahan'])->name('rusak.ajukanPemusnahan');
-
-        Route::resource('pemusnaan', PemusnaanController::class);
         Route::put('/pemusnaan/{id}/laksanakan', [PemusnaanController::class, 'laksanakan'])->name('pemusnaan.laksanakan');
         Route::get('/pemusnaan/create', [PemusnaanController::class, 'create'])->name('pemusnaan.create');
         Route::post('/pemusnaan/store', [PemusnaanController::class, 'store'])->name('pemusnaan.store');
     });
 
-    // 🕓 Riwayat
     Route::middleware('checkRole:A,U,K,W')->group(function () {
         Route::resource('history', HistorieController::class);
     });
 
-    // ❌ Peminjam bisa batalkan peminjaman
-    Route::patch('/peminjaman/{id}/batalkan', [PeminjamanController::class, 'batalkan'])->name('peminjaman.batalkan');
 });

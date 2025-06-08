@@ -10,11 +10,13 @@
           <div class="col">
             <h4 class="card-title">Aset Barang Sekolah</h4>
           </div>
+          @if(in_array(Auth::user()->role, ['A']))
           <div class="col text-end d-flex align-items-end justify-content-end">
             <a href="{{ route('barang.create')}}" class="btn btn-success mdi mdi-upload btn-icon-prepend">
               Tambah Data
             </a>
           </div>
+          @endif
         </div> 
          <div class="row ml-1">
     <form action="{{ route('barang.index') }}" method="GET" class="d-flex">

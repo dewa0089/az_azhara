@@ -15,11 +15,26 @@ class PeminjamanController extends Controller
 {
     public function index()
 {
-    // Menampilkan semua data peminjaman, tanpa filter status
-    $peminjaman = Peminjaman::with('barang')->get();
+    $user = Auth::user();
+
+    if (in_array($user->role, ['A', 'K', 'W'])) {
+        // Untuk Admin, Kepala Sekolah, dan Wakil Kepala Sekolah
+        $peminjaman = Peminjaman::with('barang')
+            ->orderByRaw("CASE WHEN status = 'Menunggu Persetujuan' THEN 0 ELSE 1 END")
+            ->orderBy('created_at', 'desc')
+            ->get();
+    } else {
+        // Untuk User biasa, hanya data miliknya
+        $peminjaman = Peminjaman::with('barang')
+            ->where('user_id', $user->id)
+            ->orderByRaw("CASE WHEN status = 'Menunggu Persetujuan' THEN 0 ELSE 1 END")
+            ->orderBy('created_at', 'desc')
+            ->get();
+    }
 
     return view("peminjaman.index", compact("peminjaman"));
 }
+
 
 
     public function create()
@@ -40,7 +55,7 @@ class PeminjamanController extends Controller
 
         $tgl_kembali = Carbon::parse($request->tgl_peminjam)->addYear();
 
-        Peminjaman::create([
+        $peminjaman = Peminjaman::create([
             'nama_peminjam' => $request->nama_peminjam,
             'barang_id' => $request->barang_id,
             'kode_barang' => $request->kode_barang,
@@ -50,6 +65,8 @@ class PeminjamanController extends Controller
             'status' => 'Menunggu Persetujuan',
             'user_id' => Auth::id(),
         ]);
+
+        ActivityHelper::log('Ajukan Peminjaman', 'Peminjaman oleh ' . $peminjaman->nama_peminjam . ' untuk barang ' . $peminjaman->kode_barang . ' telah diajukan.');
 
         return redirect()->route('peminjaman.index')->with('success', 'Peminjaman berhasil diajukan!');
     }
@@ -75,6 +92,8 @@ class PeminjamanController extends Controller
         $peminjaman = Peminjaman::findOrFail($id);
         $peminjaman->update($request->all());
 
+        ActivityHelper::log('Update Peminjaman', 'Data peminjaman ' . $peminjaman->kode_barang . ' diperbarui.');
+
         return redirect()->route('peminjaman.index')->with('success', 'Data peminjaman berhasil diperbarui');
     }
 
@@ -83,13 +102,15 @@ class PeminjamanController extends Controller
         $peminjaman = Peminjaman::findOrFail($id);
         $barang = Barang::findOrFail($peminjaman->barang_id);
 
-        // Kembalikan stok hanya jika status bukan disetujui
         if ($peminjaman->status !== 'Disetujui') {
             $barang->jumlah_barang += $peminjaman->jumlah_peminjam;
             $barang->save();
         }
 
+        $kodeBarang = $peminjaman->kode_barang;
         $peminjaman->delete();
+
+        ActivityHelper::log('Hapus Peminjaman', 'Peminjaman untuk barang ' . $kodeBarang . ' dihapus.');
 
         return redirect()->route('peminjaman.index')->with('success', 'Data peminjaman dihapus.');
     }
@@ -114,7 +135,6 @@ class PeminjamanController extends Controller
         $peminjaman->status = 'Disetujui';
         $peminjaman->save();
 
-        // Buat data pengembalian otomatis jika belum ada
         if (!$peminjaman->pengembalian) {
             Pengembalian::create([
                 'id' => Str::uuid(),
@@ -127,6 +147,8 @@ class PeminjamanController extends Controller
             ]);
         }
 
+        ActivityHelper::log('Setujui Peminjaman', 'Peminjaman barang ' . $peminjaman->kode_barang . ' disetujui.');
+
         return redirect()->back()->with('success', 'Peminjaman disetujui dan data pengembalian dibuat.');
     }
 
@@ -136,6 +158,8 @@ class PeminjamanController extends Controller
         $peminjaman->status = 'Ditolak';
         $peminjaman->save();
 
+        ActivityHelper::log('Tolak Peminjaman', 'Peminjaman barang ' . $peminjaman->kode_barang . ' ditolak.');
+
         return redirect()->back()->with('success', 'Peminjaman ditolak.');
     }
 
@@ -144,6 +168,8 @@ class PeminjamanController extends Controller
         $peminjaman = Peminjaman::findOrFail($id);
         $peminjaman->status = 'Dibatalkan';
         $peminjaman->save();
+
+        ActivityHelper::log('Batalkan Peminjaman', 'Peminjaman barang ' . $peminjaman->kode_barang . ' dibatalkan.');
 
         return redirect()->back()->with('success', 'Peminjaman dibatalkan.');
     }
