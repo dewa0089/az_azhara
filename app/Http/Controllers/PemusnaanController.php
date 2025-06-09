@@ -33,7 +33,7 @@ class PemusnaanController extends Controller
             'tanggal_pemusnaan' => 'required|date',
             'jumlah_pemusnaan' => 'required|integer|min:1',
             'gambar_pemusnaan' => 'nullable|image|mimes:jpg,jpeg,png',
-            'keterangan' => 'required|string'
+            'keterangan' => 'nullable|string'
         ]);
 
         $rusak = Rusak::findOrFail($request->rusak_id);
@@ -44,7 +44,8 @@ class PemusnaanController extends Controller
         }
 
         if ($request->hasFile('gambar_pemusnaan')) {
-            $imageName = time() . '.' . $request->file('gambar_pemusnaan')->extension();
+            $tanggalPemusnaan = date('Ymd', strtotime($request->tanggal_pemusnaan));
+            $imageName = 'pemusnaan_' . $tanggalPemusnaan . '_' . uniqid() . '.' . $request->file('gambar_pemusnaan')->extension();
             $request->file('gambar_pemusnaan')->move(public_path('gambar'), $imageName);
         } else {
             $imageName = null;
@@ -64,7 +65,7 @@ class PemusnaanController extends Controller
         $rusak->save();
 
         // Tambahkan log aktivitas
-        ActivityHelper::log('Tambah Pemusnaan', 'Pemusnaan barang rusak ID ' . $rusak->id . ' berhasil ditambahkan');
+        ActivityHelper::log('Tambah Pemusnaan', 'Pemusnaan untuk Inventaris Barang Besar dengan ID ' . $rusak->id . ' berhasil ditambahkan');
 
         return redirect()->route('pemusnaan.index')->with('success', 'Pemusnaan berhasil dan status barang rusak diperbarui.');
     }
@@ -82,22 +83,22 @@ class PemusnaanController extends Controller
             'tanggal_pemusnaan' => 'required|date',
             'jumlah_pemusnaan' => 'required|integer',
             'gambar_pemusnaan' => 'nullable|image|mimes:jpg,jpeg,png',
-            'keterangan' => 'required|string'
+            'keterangan' => 'nullable|string'
         ]);
 
         $pemusnaan = Pemusnaan::findOrFail($id);
 
         // Jika ada gambar baru di-upload
         if ($request->hasFile('gambar_pemusnaan')) {
-            $imageName = time() . '.' . $request->file('gambar_pemusnaan')->extension();
-            $request->file('gambar_pemusnaan')->move(public_path('gambar'), $imageName);
-            $validated['gambar_pemusnaan'] = $imageName;
-        }
+        $tanggalPemusnaan = date('Ymd', strtotime($request->tanggal_pemusnaan));
+        $imageName = 'pemusnaan_' . $tanggalPemusnaan . '_' . uniqid() . '.' . $request->file('gambar_pemusnaan')->extension();
+        $request->file('gambar_pemusnaan')->move(public_path('gambar'), $imageName);
+}
 
         $pemusnaan->update($validated);
 
         // Tambahkan log aktivitas update
-        ActivityHelper::log('Update Pemusnaan', 'Data pemusnaan ID ' . $pemusnaan->id . ' berhasil diupdate');
+        ActivityHelper::log('Update Pemusnaan', 'Data Pemusnaan untuk Inventaris Barang Besar dengan ID ' . $pemusnaan->id . ' berhasil diupdate');
 
         return redirect()->route('pemusnaan.index')->with('success', 'Data pemusnaan berhasil diupdate.');
     }
@@ -109,7 +110,7 @@ class PemusnaanController extends Controller
         $pemusnaan->delete();
 
         // Tambahkan log aktivitas hapus
-        ActivityHelper::log('Hapus Pemusnaan', 'Data pemusnaan ID ' . $pemusnaanId . ' berhasil dihapus');
+        ActivityHelper::log('Hapus Pemusnaan', 'Data Pemusnaan untuk Inventaris Barang Besar dengan ID ' . $pemusnaanId . ' berhasil dihapus');
 
         return redirect()->route('pemusnaan.index')->with('success', 'Data pemusnaan berhasil dihapus.');
     }

@@ -48,6 +48,7 @@ class PengembalianController extends Controller
         'jumlah_brg_rusak' => 'required|integer|min:0',
         'jumlah_brg_hilang' => 'required|integer|min:0',
         'tgl_pengembalian' => 'required|date',
+        'keterangan' => 'nullable|string',
     ]);
 
     $pengembalian = Pengembalian::with(['peminjaman.barang'])->findOrFail($id);
@@ -66,12 +67,13 @@ class PengembalianController extends Controller
         'jumlah_brg_rusak' => $validated['jumlah_brg_rusak'],
         'jumlah_brg_hilang' => $validated['jumlah_brg_hilang'],
         'tgl_pengembalian' => $validated['tgl_pengembalian'],
+        'keterangan' => $validated['keterangan'],
         'status' => 'Menunggu Persetujuan',
     ]);
 
     ActivityHelper::log(
         'Pengajuan Pengembalian',
-        'Pengembalian untuk barang ' . $pengembalian->peminjaman->barang->nama_barang . ' telah diajukan.'
+        'Pengembalian untuk Inventaris Barang Kecil dengan nama ' . $pengembalian->peminjaman->barang->nama_barang . ' telah diajukan.'
     );
 
     return redirect()->route('pengembalian.index')->with('success', 'Pengajuan pengembalian berhasil diajukan.');
@@ -87,7 +89,7 @@ class PengembalianController extends Controller
         // Log aktivitas
         ActivityHelper::log(
             'Hapus Pengembalian',
-            'Data pengembalian barang ' . $namaBarang . ' telah dihapus.'
+            'Data Pengembalian untuk Inventaris Barang Kecil dengan nama ' . $namaBarang . ' telah dihapus.'
         );
 
         return redirect()->route('pengembalian.index')->with('success', 'Data Barang berhasil dihapus');
@@ -126,7 +128,7 @@ class PengembalianController extends Controller
         // Log aktivitas
         ActivityHelper::log(
             'Persetujuan Pengembalian',
-            'Pengembalian barang ' . $barang->nama_barang . ' telah disetujui. Stok dan status diperbarui.'
+            'Pengembalian untuk Inventaris Barang Kecil dengan nama ' . $barang->nama_barang . ' telah disetujui. Stok dan status diperbarui.'
         );
 
         return redirect()->route('pengembalian.index')->with('success', 'Pengembalian disetujui dan data barang diperbarui.');

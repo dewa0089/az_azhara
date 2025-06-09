@@ -20,6 +20,7 @@ return new class extends Migration
             $table->date('tgl_pengembalian')->nullable();
             $table->uuid('peminjaman_id');
             $table->foreign('peminjaman_id')->references('id')->on('peminjamans')->restrictOnDelete()->restrictOnUpdate();
+            $table->integer('keterangan')->nullable();
             $table->string('status')->default('Belum Di kembalikan')->nullable();
             $table->timestamps();
         });

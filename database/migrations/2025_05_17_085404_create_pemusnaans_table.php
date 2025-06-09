@@ -16,8 +16,8 @@ return new class extends Migration
             $table->primary('id');
             $table->integer('jumlah_pemusnaan')->nullable();
             $table->date('tanggal_pemusnaan')->nullable(); 
-            $table->string('gambar_pemusnaan')->nullable();
-            $table->text('keterangan')->nullable();
+            $table->string('gambar_pemusnaan')->nullable()->default('-');
+            $table->text('keterangan')->nullable()->default('-');
             $table->uuid('rusak_id');
             $table->foreign('rusak_id')->references('id')->on('rusaks')->restrictOnDelete()->restrictOnUpdate();
             $table->timestamps();

@@ -25,8 +25,7 @@ Route::post('register', [AuthController::class, 'register']);
 // Route::middleware(['auth:sanctum', 'ability:update-fakulitas'])->patch('fakulitas/{id}', [FakulitasController::class, 'update']);
 // Route::middleware(['auth:sanctum', 'ability:delete-fakulitas'])->delete('fakulitas/{id}', [FakulitasController::class, 'destroy']);
 
-//Route get
-// Route::get('fakulitas', [FakulitasController::class, 'index']);
+
 
 Route::get('barang', [BarangController::class, 'index']);
 Route::get('barangRusak', [BarangRusakController::class, 'index']);

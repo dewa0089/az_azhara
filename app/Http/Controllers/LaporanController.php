@@ -27,7 +27,7 @@ class LaporanController extends Controller
         $totalHarga = $elektronikCetak->sum('total_harga');
 
         // Log aktivitas
-        ActivityHelper::log('Cetak Laporan', 'Laporan elektronik berhasil dicetak');
+        ActivityHelper::log('Cetak Laporan', 'Laporan Inventaris Barang Besar Elektronik berhasil dicetak');
 
         return view("laporan.elektronik", [
             'elektronik' => $elektronikCetak,
@@ -41,7 +41,7 @@ class LaporanController extends Controller
         $totalHarga = $mobilerCetak->sum('total_harga');
 
         // Log aktivitas
-        ActivityHelper::log('Cetak Laporan', 'Laporan mobiler berhasil dicetak');
+        ActivityHelper::log('Cetak Laporan', 'Laporan Inventaris Barang Mobiler berhasil dicetak');
 
         return view("laporan.mobiler", [
             'mobiler' => $mobilerCetak,
@@ -55,7 +55,7 @@ class LaporanController extends Controller
         $totalHarga = $lainnyaCetak->sum('total_harga');
 
         // Log aktivitas
-        ActivityHelper::log('Cetak Laporan', 'Laporan lainnya berhasil dicetak');
+        ActivityHelper::log('Cetak Laporan', 'Laporan Inventaris Barang Lainnya berhasil dicetak');
 
         return view("laporan.lainnya", [
             'lainnya' => $lainnyaCetak,
@@ -69,7 +69,7 @@ class LaporanController extends Controller
         $totalHarga = $barangCetak->sum('total_harga');
 
         // Log aktivitas
-        ActivityHelper::log('Cetak Laporan', 'Laporan barang kecil berhasil dicetak');
+        ActivityHelper::log('Cetak Laporan', 'Laporan Inventaris Barang Kecil berhasil dicetak');
 
         return view("laporan.barangKecil", [
             'barang' => $barangCetak,
@@ -82,7 +82,7 @@ class LaporanController extends Controller
         $peminjamanCetak = Peminjaman::all();
 
         // Log aktivitas
-        ActivityHelper::log('Cetak Laporan', 'Laporan peminjaman berhasil dicetak');
+        ActivityHelper::log('Cetak Laporan', 'Laporan Peminjaman Inventaris Barang Kecil berhasil dicetak');
 
         return view("laporan.peminjaman", [
             'peminjaman' => $peminjamanCetak,
@@ -94,7 +94,7 @@ class LaporanController extends Controller
         $pengembalianCetak = Pengembalian::all();
 
         // Log aktivitas
-        ActivityHelper::log('Cetak Laporan', 'Laporan pengembalian berhasil dicetak');
+        ActivityHelper::log('Cetak Laporan', 'Laporan Pengembalian Inventaris Barang Kecil berhasil dicetak');
 
         return view("laporan.pengembalian", [
             'pengembalian' => $pengembalianCetak,
@@ -107,7 +107,7 @@ class LaporanController extends Controller
         $totalHarga = $pemusnaanCetak->sum('total_harga');
 
         // Log aktivitas
-        ActivityHelper::log('Cetak Laporan', 'Laporan pemusnaan berhasil dicetak');
+        ActivityHelper::log('Cetak Laporan', 'Laporan Pemusnaan Inventaris Barang Besar berhasil dicetak');
 
         return view("laporan.pemusnaan", [
             'pemusnaan' => $pemusnaanCetak,
@@ -120,7 +120,7 @@ class LaporanController extends Controller
         $barangRusakCetak = Rusak::all();
 
         // Log aktivitas
-        ActivityHelper::log('Cetak Laporan', 'Laporan barang rusak berhasil dicetak');
+        ActivityHelper::log('Cetak Laporan', 'Laporan Inventaris Barang Besar Rusak berhasil dicetak');
 
         return view("laporan.rusak", [
             'rusak' => $barangRusakCetak,

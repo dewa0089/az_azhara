@@ -28,8 +28,7 @@
                                 value="{{ $user->email }}">
 
                             <label for="password">Password</label>
-                            <input type="text" class="form-control" name="password" placeholder="Password"
-                                value="{{ $user->password }}">
+                            <input type="text" class="form-control" name="password" placeholder="Password">
 
                             <label for="role">Role</label>
                             <select class="form-control" name="role" id="role">

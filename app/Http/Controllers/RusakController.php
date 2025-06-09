@@ -35,7 +35,7 @@ class RusakController extends Controller
             'jumlah_brg_rusak' => 'required|integer|min:1',
             'gambar_brg_rusak' => 'required|image|mimes:jpeg,png,jpg,gif',
             'tgl_rusak' => 'required|date',
-            'keterangan' => 'required|string',
+            'keterangan' => 'nullable|string',
             'elektronik_id' => 'nullable|exists:elektroniks,id',
             'mobiler_id' => 'nullable|exists:mobilers,id',
             'lainnya_id' => 'nullable|exists:lainnyas,id',
@@ -47,7 +47,8 @@ class RusakController extends Controller
         // Upload gambar
         if ($request->hasFile('gambar_brg_rusak')) {
             $file = $request->file('gambar_brg_rusak');
-            $fileName = time() . '.' . $file->getClientOriginalExtension();
+            $tanggalRusak = date('Ymd', strtotime($request->tgl_rusak));
+            $fileName = 'rusak_' . $tanggalRusak . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
             $file->move(public_path('gambar'), $fileName);
             $data['gambar_brg_rusak'] = $fileName;
         }
@@ -90,7 +91,7 @@ class RusakController extends Controller
             'jumlah_brg_rusak' => 'required|integer|min:1',
             'gambar_brg_rusak' => 'nullable|image|mimes:jpeg,png,jpg,gif',
             'tgl_rusak' => 'required|date',
-            'keterangan' => 'required|string',
+            'keterangan' => 'nullable|string',
             'status' => 'required|string',
             'elektronik_id' => 'nullable|exists:elektroniks,id',
             'mobiler_id' => 'nullable|exists:mobilers,id',
@@ -99,13 +100,14 @@ class RusakController extends Controller
 
         $rusak = Rusak::findOrFail($id);
         $data = $request->except('gambar_brg_rusak');
-
+        
         if ($request->hasFile('gambar_brg_rusak')) {
             if ($rusak->gambar_brg_rusak && file_exists(public_path('gambar/' . $rusak->gambar_brg_rusak))) {
                 unlink(public_path('gambar/' . $rusak->gambar_brg_rusak));
             }
             $file = $request->file('gambar_brg_rusak');
-            $fileName = time() . '.' . $file->getClientOriginalExtension();
+            $tanggalRusak = date('Ymd', strtotime($request->tgl_rusak));
+            $fileName = 'rusak_' . $tanggalRusak . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
             $file->move(public_path('gambar'), $fileName);
             $data['gambar_brg_rusak'] = $fileName;
         }
@@ -115,7 +117,7 @@ class RusakController extends Controller
         // Logging aktivitas
         ActivityHelper::log(
             'Update Barang Rusak',
-            'Data barang rusak ID #' . $rusak->id . ' berhasil diperbarui.'
+            'Data barang rusak ID ' . $rusak->id . ' berhasil diperbarui.'
         );
 
         return redirect()->route('rusak.index')->with('success', 'Data Rusak berhasil diperbarui');
@@ -135,7 +137,7 @@ class RusakController extends Controller
         // Logging aktivitas
         ActivityHelper::log(
             'Hapus Barang Rusak',
-            'Data barang rusak dengan ID #' . $id . ' telah dihapus.'
+            'Data barang rusak dengan ID ' . $id . ' telah dihapus.'
         );
 
         return redirect()->route('rusak.index')->with('success', 'Data Rusak berhasil dihapus');

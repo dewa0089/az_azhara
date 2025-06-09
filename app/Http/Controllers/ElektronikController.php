@@ -49,7 +49,7 @@ class ElektronikController extends Controller
 
         $elektronik = Elektronik::create($validated);
 
-        ActivityHelper::log('Tambah Barang', 'Elektronik ' . $elektronik->nama_barang . ' berhasil ditambahkan');
+        ActivityHelper::log('Tambah Barang', 'Inventaris Barang Besar Elektronik dengan nama ' . $elektronik->nama_barang . ' berhasil ditambahkan');
 
         return redirect()->route('elektronik.index')->with('success', 'Data Barang Elektronik berhasil disimpan');
     }
@@ -78,20 +78,26 @@ class ElektronikController extends Controller
         $elektronik = Elektronik::find($id);
         $elektronik->update($validated);
 
-        ActivityHelper::log('Edit Barang', 'Elektronik ' . $elektronik->nama_barang . ' berhasil diupdate');
+        ActivityHelper::log('Edit Barang', 'Inventaris Barang Besar Elektronik dengan nama ' . $elektronik->nama_barang . ' berhasil diupdate');
 
         return redirect()->route('elektronik.index')->with('success', 'Data Barang Elektronik berhasil diupdate');
     }
 
-    public function destroy($id)
+   public function destroy($id)
     {
-        $elektronik = Elektronik::find($id);
-        $namaBarang = $elektronik->nama_barang;
-
+    try {
+        $elektronik = Elektronik::findOrFail($id);
+        $nama = $elektronik->nama_barang;
         $elektronik->delete();
 
-        ActivityHelper::log('Hapus Barang', 'Elektronik ' . $namaBarang . ' berhasil dihapus');
+        // Simpan riwayat
+        ActivityHelper::log('Hapus Barang', 'Inventaris Barang Besar Elektronik dengan nama ' . $nama . ' berhasil dihapus');
 
-        return redirect()->route('elektronik.index')->with('success', 'Data Barang Elektronik berhasil dihapus');
+        return redirect()->route('elektronik.index')->with('success', 'Data Barang berhasil dihapus');
+    } catch (\Illuminate\Database\QueryException $e) {
+        return redirect()->route('elektronik.index')->with('error', 'Data tidak dapat dihapus karena masih digunakan.');
+    } catch (\Exception $e) {
+        return redirect()->route('elektronik.index')->with('error', 'Terjadi kesalahan saat menghapus data.');
+    }
     }
 }

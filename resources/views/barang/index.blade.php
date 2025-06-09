@@ -98,5 +98,8 @@
   @if (Session::get('success'))
     toastr.success("{{ Session::get('success') }}")
   @endif
+  @if (Session::get('error'))
+            toastr.error("{{ Session::get('error') }}")
+        @endif
 </script>
 @endsection

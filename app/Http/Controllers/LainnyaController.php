@@ -35,6 +35,7 @@ class LainnyaController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'kode_barang' => 'required|unique:lainnyas',
             'nama_barang' => 'required',
             'merk' => 'required',
             'type' => 'required',
@@ -49,7 +50,7 @@ class LainnyaController extends Controller
         $lainnya = Lainnya::create($validated);
 
         // Simpan riwayat aktivitas
-        ActivityHelper::log('Tambah Barang', 'Barang lainnya ' . $lainnya->nama_barang . ' berhasil ditambahkan');
+        ActivityHelper::log('Tambah Barang', 'Inventaris Barang Besar Lainnya dengan nama ' . $lainnya->nama_barang . ' berhasil ditambahkan');
 
         return redirect()->route('lainnya.index')->with('success', 'Data Barang Lainnya berhasil disimpan');
     }
@@ -63,6 +64,7 @@ class LainnyaController extends Controller
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
+            'kode_barang' => 'required|unique:lainnyas,kode_barang,' . $id,
             'nama_barang' => 'required',
             'merk' => 'required',
             'type' => 'required',
@@ -84,20 +86,26 @@ class LainnyaController extends Controller
         $lainnya->update($validated);
 
         // Simpan riwayat aktivitas
-        ActivityHelper::log('Edit Barang', 'Barang lainnya ' . $lainnya->nama_barang . ' berhasil diupdate');
+        ActivityHelper::log('Edit Barang', 'Inventaris Barang Besar Lainnya dengan nama ' . $lainnya->nama_barang . ' berhasil diupdate');
 
         return redirect()->route('lainnya.index')->with('success', 'Data Barang Lainnya berhasil diupdate');
     }
 
-    public function destroy($id)
+     public function destroy($id)
     {
-        $lainnya = Lainnya::find($id);
+    try {
+        $lainnya = Lainnya::findOrFail($id);
         $nama = $lainnya->nama_barang;
         $lainnya->delete();
 
-        // Simpan riwayat aktivitas
-        ActivityHelper::log('Hapus Barang', 'Barang lainnya ' . $nama . ' berhasil dihapus');
+        // Simpan riwayat
+        ActivityHelper::log('Hapus Barang', 'Inventaris Barang Besar Lainnya dengan nama ' . $nama . ' berhasil dihapus');
 
-        return redirect()->route('lainnya.index')->with('success', 'Data Barang Lainnya berhasil dihapus');
+        return redirect()->route('lainnya.index')->with('success', 'Data Barang berhasil dihapus');
+    } catch (\Illuminate\Database\QueryException $e) {
+        return redirect()->route('lainnya.index')->with('error', 'Data tidak dapat dihapus karena masih digunakan.');
+    } catch (\Exception $e) {
+        return redirect()->route('lainnya.index')->with('error', 'Terjadi kesalahan saat menghapus data.');
+    }
     }
 }

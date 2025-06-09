@@ -25,6 +25,7 @@
                 <th>Jumlah Barang Rusak</th>
                 <th>Jumlah Barang Hilang</th>
                 <th>Tanggal Pengembalian</th>
+                <th>Keterangan</th>
                 <th>Status</th>
                 <th>Aksi</th>
               </tr>
@@ -42,6 +43,7 @@
                 <td>{{ $item->jumlah_brg_rusak ?? '-' }}</td>
                 <td>{{ $item->jumlah_brg_hilang ?? '-' }}</td>
                 <td>{{ $item->tgl_pengembalian ?? '-' }}</td>
+                <td>{{ $item->keterangan ?? '-' }}</td>
                 <td>
                   <span class="badge 
                     @if($item->status == 'Disetujui') bg-success 

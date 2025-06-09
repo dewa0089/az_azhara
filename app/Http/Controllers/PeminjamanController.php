@@ -66,7 +66,7 @@ class PeminjamanController extends Controller
             'user_id' => Auth::id(),
         ]);
 
-        ActivityHelper::log('Ajukan Peminjaman', 'Peminjaman oleh ' . $peminjaman->nama_peminjam . ' untuk barang ' . $peminjaman->kode_barang . ' telah diajukan.');
+        ActivityHelper::log('Ajukan Peminjaman', 'Peminjaman oleh ' . $peminjaman->nama_peminjam . ' untuk Inventaris Barang Kecil dengan nama ' . $peminjaman->barang->nama_barang . ' telah diajukan.');
 
         return redirect()->route('peminjaman.index')->with('success', 'Peminjaman berhasil diajukan!');
     }
@@ -92,7 +92,7 @@ class PeminjamanController extends Controller
         $peminjaman = Peminjaman::findOrFail($id);
         $peminjaman->update($request->all());
 
-        ActivityHelper::log('Update Peminjaman', 'Data peminjaman ' . $peminjaman->kode_barang . ' diperbarui.');
+        ActivityHelper::log('Update Peminjaman', 'Data peminjaman untuk Inventaris Barang Kecil dengan nama ' . $peminjaman->barang->nama_barang . ' diperbarui.');
 
         return redirect()->route('peminjaman.index')->with('success', 'Data peminjaman berhasil diperbarui');
     }
@@ -110,7 +110,7 @@ class PeminjamanController extends Controller
         $kodeBarang = $peminjaman->kode_barang;
         $peminjaman->delete();
 
-        ActivityHelper::log('Hapus Peminjaman', 'Peminjaman untuk barang ' . $kodeBarang . ' dihapus.');
+        ActivityHelper::log('Hapus Peminjaman', 'Peminjaman untuk Inventaris Barang Kecil dengan nama ' . $peminjaman->barang->nama_barang . ' dihapus.');
 
         return redirect()->route('peminjaman.index')->with('success', 'Data peminjaman dihapus.');
     }
@@ -147,7 +147,7 @@ class PeminjamanController extends Controller
             ]);
         }
 
-        ActivityHelper::log('Setujui Peminjaman', 'Peminjaman barang ' . $peminjaman->kode_barang . ' disetujui.');
+        ActivityHelper::log('Setujui Peminjaman', 'Peminjaman untuk Inventaris Barang Kecil dengan nama ' . $peminjaman->barang->namabarang . ' disetujui.');
 
         return redirect()->back()->with('success', 'Peminjaman disetujui dan data pengembalian dibuat.');
     }
@@ -158,7 +158,7 @@ class PeminjamanController extends Controller
         $peminjaman->status = 'Ditolak';
         $peminjaman->save();
 
-        ActivityHelper::log('Tolak Peminjaman', 'Peminjaman barang ' . $peminjaman->kode_barang . ' ditolak.');
+        ActivityHelper::log('Tolak Peminjaman', 'Peminjaman untuk Inventaris Barang Kecil dengan nama ' . $peminjaman->barang->nama_barang . ' ditolak.');
 
         return redirect()->back()->with('success', 'Peminjaman ditolak.');
     }
@@ -169,7 +169,7 @@ class PeminjamanController extends Controller
         $peminjaman->status = 'Dibatalkan';
         $peminjaman->save();
 
-        ActivityHelper::log('Batalkan Peminjaman', 'Peminjaman barang ' . $peminjaman->kode_barang . ' dibatalkan.');
+        ActivityHelper::log('Batalkan Peminjaman', 'Peminjaman untuk Inventaris Barang Kecil dengan nama ' . $peminjaman->barang->nama_barang . ' dibatalkan.');
 
         return redirect()->back()->with('success', 'Peminjaman dibatalkan.');
     }

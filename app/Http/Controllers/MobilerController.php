@@ -51,7 +51,7 @@ class MobilerController extends Controller
         $mobiler = Mobiler::create($validated);
 
         // Simpan riwayat
-        ActivityHelper::log('Tambah Barang', 'Mobiler ' . $mobiler->nama_barang . ' berhasil ditambahkan');
+        ActivityHelper::log('Tambah Barang', 'Inventaris Barang Besar Mobiler dengan nama ' . $mobiler->nama_barang . ' berhasil ditambahkan');
 
         return redirect()->route('mobiler.index')->with('success', 'Data Barang Mobiler berhasil disimpan');
     }
@@ -81,20 +81,27 @@ class MobilerController extends Controller
         $mobiler->update($validated);
 
         // Simpan riwayat
-        ActivityHelper::log('Edit Barang', 'Mobiler ' . $mobiler->nama_barang . ' berhasil diupdate');
+        ActivityHelper::log('Edit Barang', 'Inventaris Barang Besar Mobiler dengan nama ' . $mobiler->nama_barang . ' berhasil diupdate');
 
         return redirect()->route('mobiler.index')->with('success', 'Data Barang Mobiler berhasil diupdate');
     }
 
-    public function destroy($id)
-    {
-        $mobiler = Mobiler::find($id);
+   public function destroy($id)
+{
+    try {
+        $mobiler = Mobiler::findOrFail($id);
         $nama = $mobiler->nama_barang;
         $mobiler->delete();
 
         // Simpan riwayat
-        ActivityHelper::log('Hapus Barang', 'Mobiler ' . $nama . ' berhasil dihapus');
+        ActivityHelper::log('Hapus Barang', 'Inventaris Barang Besar Mobiler dengan nama ' . $nama . ' berhasil dihapus');
 
         return redirect()->route('mobiler.index')->with('success', 'Data Barang berhasil dihapus');
+    } catch (\Illuminate\Database\QueryException $e) {
+        return redirect()->route('mobiler.index')->with('error', 'Data tidak dapat dihapus karena masih digunakan.');
+    } catch (\Exception $e) {
+        return redirect()->route('mobiler.index')->with('error', 'Terjadi kesalahan saat menghapus data.');
     }
+}
+
 }

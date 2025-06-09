@@ -12,7 +12,14 @@
                     </p>
                     <form class="forms-sample" method="POST" action="{{ route('lainnya.store') }}" enctype="multipart/form-data">
                         @csrf
-                        <div class="form-group">                           
+                        <div class="form-group"> 
+                            <label for="kode_barang">Kode Barang</label>
+                            <input type="text" class="form-control" name="kode_barang" placeholder="Kode Barang"
+                                value="{{ old('kode_barang') }}">
+                            @error('kode_barang')
+                                <label class="text-danger">{{ $message }}</label>
+                            @enderror    
+
                             <label for="nama_barang">Nama Barang</label>
                             <input type="text" class="form-control" name="nama_barang" placeholder="Nama Barang"
                                 value="{{ old('nama_barang') }}">
