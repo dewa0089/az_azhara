@@ -18,11 +18,11 @@ return new class extends Migration
             $table->string('nama_barang');
             $table->string('merk');
             $table->string('type');
-            $table->date('tgl_peroleh')->nullable();
+            $table->date('tgl_peroleh');
             $table->string('asal_usul');
-            $table->string('cara_peroleh')->nullable();
-            $table->integer('jumlah_brg')->nullable();
-            $table->integer('harga_perunit')->nullable();
+            $table->string('cara_peroleh');
+            $table->integer('jumlah_brg');
+            $table->integer('harga_perunit');
             $table->integer('total_harga')->nullable();
             $table->timestamps();
         });

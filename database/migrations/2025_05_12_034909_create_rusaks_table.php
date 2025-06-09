@@ -16,9 +16,9 @@ return new class extends Migration
             $table->primary('id');
             $table->enum('jenis_brg_rusak', ['elektronik', 'mobiler', 'lainnya']);
             $table->integer('jumlah_brg_rusak');
-            $table->string('gambar_brg_rusak'); 
+            $table->string('gambar_brg_rusak')->nullable()->default('-'); 
             $table->date('tgl_rusak');
-            $table->text('keterangan')->nullable();
+            $table->text('keterangan')->nullable()->default('-');
             $table->string('status')->default('Rusak');
 
             $table->uuid('elektronik_id')->nullable();

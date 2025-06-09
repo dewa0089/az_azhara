@@ -65,7 +65,7 @@
                         @default
                             Tidak Diketahui
                     @endswitch
-                  </td>
+                </td>
 
                   <td>
                       <div class="d-flex justify-content-center">

@@ -14,16 +14,16 @@
                         @csrf
                         <div class="form-group">
                             <label for="name">Nama User</label>
-                            <input type="text" class="form-control" name="name" placeholder="Nama User">
+                            <input type="text" class="form-control" name="name" placeholder="Nama User" required>
 
                             <label for="email">Email User</label>
-                            <input type="email" class="form-control" name="email" placeholder="Email User">
+                            <input type="email" class="form-control" name="email" placeholder="Email User" required>
 
                             <label for="password">Password User</label>
-                            <input type="text" class="form-control" name="password" placeholder="Password User">
+                            <input type="text" class="form-control" name="password" placeholder="Password User" required>
 
                             <label for="role">Role</label>
-                            <select class="form-control" name="role" id="role">
+                            <select class="form-control" name="role" id="role" required>
                                 <option value="">-- Pilih Role --</option>
                                 <option value="A">Admin</option>
                                 <option value="U">User</option>

@@ -58,6 +58,12 @@
                             <label class="text-danger">{{ $message }}</label>
                         @enderror
 
+                         <label for="keterangan">Keterangan</label>
+                        <input type="text" class="form-control" name="keterangan" value="{{ old('keterangan', $pengembalian->keterangan) }}">
+                        @error('keterangan')
+                            <label class="text-danger">{{ $message }}</label>
+                        @enderror
+
                         @if ($errors->has('total_pengembalian'))
     <div class="alert alert-danger mt-2">
         {{ $errors->first('total_pengembalian') }}

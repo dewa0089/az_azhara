@@ -13,11 +13,10 @@ return new class extends Migration
     {
         Schema::create('histories', function (Blueprint $table) {
         $table->id();
-        $table->unsignedBigInteger('user_id');  // siapa yang melakukan aksi
-        $table->string('action');               // aktivitas yang dilakukan, misal 'Tambah Barang'
-        $table->text('description')->nullable();  // deskripsi tambahan (optional)
+        $table->unsignedBigInteger('user_id');
+        $table->string('action');               
+        $table->text('description')->nullable(); 
         $table->timestamps();
-
         $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }

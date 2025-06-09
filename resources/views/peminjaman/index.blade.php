@@ -101,13 +101,6 @@
 @section('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
 <script>
-    @if (Session::get('success'))
-        toastr.success("{{ Session::get('success') }}")
-    @endif
-
-    @if ($errors->has('stok'))
-        toastr.error("{{ $errors->first('stok') }}")
-    @endif
 
     // Fungsi umum untuk handle konfirmasi sweetalert pada tombol submit
     function confirmAction(form, message) {

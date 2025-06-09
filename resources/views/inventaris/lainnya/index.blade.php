@@ -30,6 +30,9 @@
                   No
                 </th>
                 <th>
+                  Kode Barang
+                </th>
+                <th>
                   Nama Barang
                 </th>
                 <th>
@@ -67,6 +70,7 @@
              @forelse ($lainnya as $item)
 <tr>
   <td>{{ $loop->iteration }}</td>
+   <td>{{ $item['kode_barang'] }}</td>
   <td>{{ $item['nama_barang'] }}</td>
   <td>{{ $item['merk'] }}</td>
   <td>{{ $item['type'] }}</td>
@@ -95,13 +99,13 @@
 </tr>
 @empty
 <tr>
-  <td colspan="11" class="text-center">Tidak ada data Barang Lainnya.</td>
+  <td colspan="12" class="text-center">Tidak ada data Barang Lainnya.</td>
 </tr>
 @endforelse
 
 @if(count($lainnya) > 0)
 <tr>
-  <td colspan="9" class="text-end fw-bold">Total Keseluruhan</td>
+  <td colspan="10" class="text-end fw-bold">Total Keseluruhan</td>
   <td class="fw-bold">Rp {{ number_format($totalHarga, 0, ',', '.') }}</td>
   <td></td>
 </tr>
@@ -120,6 +124,9 @@
     <script>
         @if (Session::get('success'))
             toastr.success("{{ Session::get('success') }}")
+        @endif
+        @if (Session::get('error'))
+            toastr.error("{{ Session::get('error') }}")
         @endif
     </script>
 @endsection

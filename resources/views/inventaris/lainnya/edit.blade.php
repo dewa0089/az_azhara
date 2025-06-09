@@ -15,6 +15,10 @@
                         @csrf
                         @method('PUT')
                         <div class="form-group">
+                            <label for="kode_barang">Kode Barang</label>
+                            <input type="text" class="form-control" name="kode_barang" placeholder="Kode Barang"
+                                value="{{ $lainnya->kode_barang }}">
+
                             <label for="nama_barang">Nama Barang</label>
                             <input type="text" class="form-control" name="nama_barang" placeholder="Nama Barang"
                                 value="{{ $lainnya->nama_barang }}">

@@ -137,14 +137,11 @@
           <ul class="navbar-nav navbar-nav-right">
             <li class="nav-item nav-profile dropdown">
               <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown" style="color: white">
-                <img src="images/faces/face5.jpg" alt="profile"/>
-                <span class="nav-profile-name" style="color: white; font-size: 18px">{{ Auth::user()->name }}</span>
+                
+                <span class="nav-profile-name font-weight-bold" style="color: white; font-size: 18px">{{ Auth::user()->name }}</span>
               </a>
               <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-                <a class="dropdown-item">
-                  <i class="mdi mdi-settings text-primary"></i>
-                  Settings
-                </a>
+          
                 <a class="dropdown-item" href="{{ route('logout') }}"
                 onclick="event.preventDefault();
                                  document.getElementById('logout-form').submit();">
@@ -179,8 +176,8 @@
             <div class="card-body">
               <div class="d-sm-flex justify-content-center justify-content-sm-between">
                 <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © azzhara.com 2025</span>
-                <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Distributed By: <a href="https://www.themewagon.com/" target="_blank">Az-Zahra</a></span>
-                <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center"> Free <a href="https://www.bootstrapdash.com/" target="_blank">Bootstrap dashboard templates</a> from Bootstrapdash.com</span>
+                <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Distributed By: <a href="https://azzahrasriwijaya.sch.id/sma-islam-az-zahrah/" target="_blank">Az-Zahra</a></span>
+                <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center"> Sekolah Menengah Atas Islam Az Zahra</span>
               </div>
             </div>
           </div>

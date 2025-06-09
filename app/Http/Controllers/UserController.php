@@ -46,7 +46,7 @@ class UserController extends Controller
         // Validasi input
         $validated = $request->validate([
             'name' => 'required',
-            'email' => 'required',
+            'email' => 'required|unique:users',
             'password' => 'required',
             'role' => 'required'
         ]);

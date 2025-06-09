@@ -151,7 +151,7 @@
 
           <div class="form-group">
             <label for="keterangan">Keterangan</label>
-            <textarea name="keterangan" class="form-control" rows="3" required>{{ old('keterangan') }}</textarea>
+            <textarea name="keterangan" class="form-control" rows="3">{{ old('keterangan') }}</textarea>
             @error('keterangan')
               <label class="text-danger">{{ $message }}</label>
             @enderror
