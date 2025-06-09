@@ -6,9 +6,9 @@
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Edit Barang</h4>
+                    <h4 class="card-title">Edit User</h4>
                     <p class="card-description">
-                         Barang Non-Inventaris
+                         Edit User Account
                     </p>
                     <form class="forms-sample" method="POST" action="{{ route('user.update', $user->id) }}"
                         enctype="multipart/form-data">
