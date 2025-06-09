@@ -33,8 +33,6 @@ class PengembalianController extends Controller
     return view('pengembalian.index', compact('pengembalian'));
 }
 
-
-
     public function edit($id)
     {
         $pengembalian = Pengembalian::with(['peminjaman.barang'])->findOrFail($id);

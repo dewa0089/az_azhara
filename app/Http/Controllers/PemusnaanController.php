@@ -70,12 +70,6 @@ class PemusnaanController extends Controller
         return redirect()->route('pemusnaan.index')->with('success', 'Pemusnaan berhasil dan status barang rusak diperbarui.');
     }
 
-    public function edit($id)
-    {
-        $pemusnaan = Pemusnaan::findOrFail($id);
-        return view('pemusnaan.edit', compact('pemusnaan'));
-    }
-
     public function update(Request $request, $id)
     {
         $validated = $request->validate([

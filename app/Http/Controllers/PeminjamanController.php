@@ -71,13 +71,6 @@ class PeminjamanController extends Controller
         return redirect()->route('peminjaman.index')->with('success', 'Peminjaman berhasil diajukan!');
     }
 
-    public function edit($id)
-    {
-        $peminjaman = Peminjaman::findOrFail($id);
-        $barang = Barang::all();
-        return view('peminjaman.edit', compact('peminjaman', 'barang'));
-    }
-
     public function update(Request $request, $id)
     {
         $request->validate([
