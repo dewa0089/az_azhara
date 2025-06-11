@@ -24,7 +24,7 @@
                                         <div class="color-border"></div>
                                     </div>
                                     <div class="item">
-                                        <p class="mb-">Total Transaksi</p>
+                                        <p class="mb-">Total Peminjaman & Pengembalian</p>
                                         <h5 class="font-weight-bold mb-0">{{ $countPeminjaman + $countPengembalian }}</h5>
                                         <div class="color-border"></div>
                                     </div>

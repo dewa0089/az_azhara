@@ -26,6 +26,7 @@
                 <th>Merk</th>
                 <th>Type</th>
                 <th>Tanggal Peroleh</th>
+                <th>Tanggal & Jam Input Barang Rusak</th>
                 <th>Asal Usul</th>
                 <th>Cara Peroleh</th>
                 <th>Jumlah Rusak</th>
@@ -51,18 +52,19 @@
     <td>{{ $barang->merk ?? '-' }}</td>
     <td>{{ $barang->type ?? '-' }}</td>
     <td>{{ $barang->tgl_peroleh ?? '-' }}</td>
+    <td>{{ $item['created_at'] }}</td>
     <td>{{ $barang->asal_usul ?? '-' }}</td>
     <td>{{ $barang->cara_peroleh ?? '-' }}</td>
     <td>{{ $item->jumlah_brg_rusak }}</td>
     <td>
-        @if($item->gambar_brg_rusak)
-            <img src="{{ asset('gambar/' . $item->gambar_brg_rusak) }}" alt="Gambar Rusak" width="80">
-        @else
-            Tidak ada gambar
-        @endif
+       @if(!empty($item->gambar_brg_rusak) && file_exists(public_path('gambar/' . $item->gambar_brg_rusak)))
+    <img src="{{ asset('gambar/' . $item->gambar_brg_rusak) }}" alt="Gambar Rusak" width="80">
+@else
+    Tidak ada gambar
+@endif
     </td>
     <td>{{ $item->tgl_rusak }}</td>
-    <td>{{ $item->keterangan }}</td>
+    <td>{{ $item->keterangan ?? '-' }}</td>
     <td>Rp {{ number_format($barang->harga_perunit ?? 0, 0, ',', '.') }}</td>
  <td>
   <span class="badge 
@@ -97,7 +99,7 @@
 
  @empty
   <tr>
-    <td colspan="15" class="text-center">Tidak ada data Barang Rusak.</td>
+    <td colspan="16" class="text-center">Tidak ada data Barang Rusak.</td>
   </tr>
 
 </tr>

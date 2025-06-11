@@ -25,6 +25,9 @@
                 <th>Jumlah Barang Rusak</th>
                 <th>Jumlah Barang Hilang</th>
                 <th>Tanggal Pengembalian</th>
+                @if(in_array(Auth::user()->role, ['A']))
+                <th>Tanggal & Jam Input Pengembalian</th>
+                @endif
                 <th>Keterangan</th>
                 <th>Status</th>
                 <th>Aksi</th>
@@ -43,6 +46,9 @@
                 <td>{{ $item->jumlah_brg_rusak ?? '-' }}</td>
                 <td>{{ $item->jumlah_brg_hilang ?? '-' }}</td>
                 <td>{{ $item->tgl_pengembalian ?? '-' }}</td>
+                @if(in_array(Auth::user()->role, ['A']))
+                <td>{{ $item['created_at'] }}</td>
+                @endif
                 <td>{{ $item->keterangan ?? '-' }}</td>
                 <td>
                   <span class="badge 
@@ -79,7 +85,7 @@
               </tr>
               @empty
               <tr>
-                <td colspan="12" class="text-center">Tidak ada data Pengembalian.</td>
+                <td colspan="14" class="text-center">Tidak ada data Pengembalian.</td>
               </tr>
               @endforelse
             </tbody>

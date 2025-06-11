@@ -45,6 +45,9 @@
                   Tanggal Peroleh Barang
                 </th>
                 <th>
+                  Tanggal & Jam Input Barang
+                </th>
+                <th>
                   Asal Usul
                 </th>
                 <th>
@@ -73,6 +76,7 @@
   <td>{{ $item['merk'] }}</td>
   <td>{{ $item['type'] }}</td>
   <td>{{ $item['tgl_peroleh'] }}</td>
+  <td>{{ $item['created_at'] }}</td>
   <td>{{ $item['asal_usul'] }}</td>
   <td>{{ $item['cara_peroleh'] }}</td>
   <td>{{ $item['jumlah_brg'] }}</td>
@@ -97,13 +101,13 @@
 </tr>
 @empty
 <tr>
-  <td colspan="12" class="text-center">Tidak ada data Barang Mobiler.</td>
+  <td colspan="13" class="text-center">Tidak ada data Barang Mobiler.</td>
 </tr>
 @endforelse
 
 @if(count($mobiler) > 0)
 <tr>
-  <td colspan="10" class="text-end fw-bold">Total Keseluruhan</td>
+  <td colspan="11" class="text-end fw-bold">Total Keseluruhan</td>
   <td class="fw-bold">Rp {{ number_format($totalHarga, 0, ',', '.') }}</td>
   <td></td>
 </tr>

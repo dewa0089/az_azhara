@@ -107,11 +107,11 @@
     <td>{{ $barang->cara_peroleh ?? '-' }}</td>
     <td>{{ $item->jumlah_brg_rusak }}</td>
     <td>
-        @if($item->gambar_brg_rusak)
-            <img src="{{ asset('gambar/' . $item->gambar_brg_rusak) }}" alt="Gambar Rusak" width="80">
-        @else
-            Tidak ada gambar
-        @endif
+       @if(!empty($item->gambar_brg_rusak) && file_exists(public_path('gambar/' . $item->gambar_brg_rusak)))
+    <img src="{{ asset('gambar/' . $item->gambar_brg_rusak) }}" alt="Gambar Rusak" width="80">
+@else
+    Tidak ada gambar
+@endif
     </td>
     <td>{{ $item->tgl_rusak }}</td>
     <td>{{ $item->keterangan }}</td>

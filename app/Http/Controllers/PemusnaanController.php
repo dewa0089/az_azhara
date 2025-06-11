@@ -12,7 +12,7 @@ class PemusnaanController extends Controller
    public function index()
 {
     $pemusnaan = Pemusnaan::with(['rusak.elektronik', 'rusak.mobiler', 'rusak.lainnya'])
-        ->orderBy('tanggal_pemusnaan', 'desc') // urut dari yang terbaru ke terlama
+        ->orderBy('tanggal_pemusnaan', 'desc') 
         ->get();
 
     return view('pemusnaan.index', compact('pemusnaan'));

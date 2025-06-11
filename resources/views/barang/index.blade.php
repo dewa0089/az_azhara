@@ -35,6 +35,7 @@
                 <th>Jumlah Barang Rusak</th>
                 <th>Jumlah Barang Hilang</th>
                 <th>Tanggal Peroleh</th>
+                <th>Tanggal & Jam Input Barang</th>
                 <th>Harga Per Unit</th>
                 <th>Total Harga</th>
                 @if(in_array(Auth::user()->role, ['A']))
@@ -52,6 +53,7 @@
   <td>{{ $item['jumlah_rusak'] }}</td>
   <td>{{ $item['jumlah_hilang'] }}</td>
   <td>{{ $item['tgl_peroleh'] }}</td>
+  <td>{{ $item['created_at'] }}</td>
   <td>Rp {{ number_format($item['harga_perunit'], 0, ',', '.') }}</td>
   <td>Rp {{ number_format($item['jumlah_barang'] * $item['harga_perunit'], 0, ',', '.') }}</td>
   @if(in_array(Auth::user()->role, ['A']))
@@ -73,12 +75,12 @@
 </tr>
 @empty
 <tr>
-  <td colspan="10" class="text-center">Tidak ada data Barang.</td>
+  <td colspan="11" class="text-center">Tidak ada data Barang.</td>
 </tr>
 @endforelse
 @if(count($barang) > 0)
 <tr>
-  <td colspan="8" class="text-end fw-bold">Total Keseluruhan</td>
+  <td colspan="9" class="text-end fw-bold">Total Keseluruhan</td>
   <td class="fw-bold">Rp {{ number_format($totalHarga, 0, ',', '.') }}</td>
   <td></td>
 </tr>

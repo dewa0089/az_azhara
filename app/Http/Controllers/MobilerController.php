@@ -19,7 +19,7 @@ class MobilerController extends Controller
                 ->orWhere('type', 'like', "%{$search}%")
                 ->get();
         } else {
-            $mobiler = Mobiler::all();
+            $mobiler = Mobiler::orderBy('created_at', 'desc')->get();
         }
 
         // Hitung total harga dari data yang ditampilkan

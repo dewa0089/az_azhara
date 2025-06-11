@@ -17,6 +17,7 @@ use App\Http\Controllers\{
 };
 use App\Http\Controllers\Auth\ResetPasswordController;
 
+
 Route::get('/', fn() => view('auth.login'));
 
 Auth::routes();

@@ -19,7 +19,7 @@ class ElektronikController extends Controller
                 ->orWhere('type', 'like', "%{$search}%")
                 ->get();
         } else {
-            $elektronik = Elektronik::all();
+            $elektronik = Elektronik::orderBy('created_at', 'desc')->get();
         }
 
         $totalHarga = $elektronik->sum('total_harga');

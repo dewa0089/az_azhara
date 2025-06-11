@@ -19,6 +19,7 @@ class PengembalianController extends Controller
         // Untuk admin, kepala sekolah, wakil kepala sekolah
         $pengembalian = Pengembalian::with(['peminjaman.barang'])
             ->orderByRaw("FIELD(status, '" . implode("','", $statusOrder) . "')")
+            ->orderBy('created_at', 'desc')
             ->get();
     } else {
         // Untuk user biasa
@@ -27,6 +28,7 @@ class PengembalianController extends Controller
             })
             ->with(['peminjaman.barang'])
             ->orderByRaw("FIELD(status, '" . implode("','", $statusOrder) . "')")
+            ->orderBy('created_at', 'desc')
             ->get();
     }
 

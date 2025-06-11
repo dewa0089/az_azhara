@@ -19,7 +19,7 @@ class LainnyaController extends Controller
                 ->orWhere('type', 'like', "%{$search}%")
                 ->get();
         } else {
-            $lainnya = Lainnya::all();
+            $lainnya = Lainnya::orderBy('created_at', 'desc')->get();
         }
 
         $totalHarga = $lainnya->sum('total_harga');

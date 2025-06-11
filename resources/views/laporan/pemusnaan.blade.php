@@ -95,6 +95,9 @@
       </thead>
       <tbody>
         @forelse ($pemusnaan as $item)
+         @php
+                  $barang = $item->rusak->elektronik ?? $item->rusak->mobiler ?? $item->rusak->lainnya;
+              @endphp
         <tr>
           <td>{{ $loop->iteration }}</td>
                   <td>{{ $barang->kode_barang ?? '-' }}</td>
@@ -107,35 +110,30 @@
                   <td>{{ $barang->asal_usul ?? '-' }}</td>
                   <td>{{ $barang->cara_peroleh ?? '-' }}</td>
                   <td>{{ $item->jumlah_pemusnaan }}</td>
-                  <td>
-                      @if($item->rusak->gambar_brg_rusak)
-                          <img src="{{ asset('gambar/' . $item->rusak->gambar_brg_rusak) }}" width="80">
-                      @else
-                          Tidak ada gambar
-                      @endif
+                 <td>
+                     @if(!empty($item->rusak->gambar_brg_rusak) && file_exists(public_path('gambar/' . $item->rusak->gambar_brg_rusak)))
+                        <img src="{{ asset('gambar/' . $item->rusak->gambar_brg_rusak) }}" alt="Gambar Rusak" width="80">
+                    @else
+                        Tidak ada gambar
+                    @endif
                   </td>
                   <td>
                       @if($item->gambar_pemusnaan)
                           <img src="{{ asset('gambar/' . $item->gambar_pemusnaan) }}" width="80">
                       @else
-                          Belum ada gambar
+                          Tidak ada gambar
                       @endif
                   </td>
                   <td>Rp {{ number_format($barang->harga_perunit ?? 0, 0, ',', '.') }}</td>
                   <td>Rp {{ number_format(($barang->harga_perunit ?? 0) * $item->jumlah_pemusnaan, 0, ',', '.') }}</td>
-                  <td>{{ $item->keterangan }}</td>
+                  <td>{{ $item->keterangan ?? '-' }}</td>
         </tr>
         @empty
-        <tr>
-          <td colspan="16" class="text-center">Tidak ada data Barang Pemusnaan.</td>
-        </tr>
+  <tr>
+    <td colspan="17" class="text-center">Tidak ada data Pemusnaan.</td>
+  </tr>
         @endforelse
-        @if(count($pemusnaan) > 0)
-        <tr>
-          <td colspan="14" class="text-end fw-bold">Total Keseluruhan</td>
-          <td colspan="2" class="fw-bold">Rp {{ number_format($totalHarga, 0, ',', '.') }}</td>
-        </tr>
-        @endif
+        
       </tbody>
     </table>
   </div>

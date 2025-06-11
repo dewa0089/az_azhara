@@ -28,6 +28,9 @@
                 <th>Nama Barang</th>
                 <th>Jumlah Peminjaman</th>
                 <th>Tanggal Peminjaman</th>
+                @if(in_array(Auth::user()->role, ['A']))
+                <th>Tanggal & Jam Input Peminjaman</th>
+                @endif
                 <th>Tanggal Batas Pengembalian</th>
                 <th>Status</th>
                 @if(in_array(Auth::user()->role, ['A']))
@@ -43,8 +46,10 @@
                   <td>{{ $item['barang']['kode_barang'] }}</td>
                   <td>{{ $item['barang']['nama_barang'] }}</td>
                   <td>{{ $item['jumlah_peminjam'] }}</td>
-                  {{-- <td><img src="gambar/{{ $item['barang']['gambar_barang'] }}" class="rounded-circle" width="70px" /> </td> --}}
                   <td>{{ $item['tgl_peminjam'] }}</td>
+                  @if(in_array(Auth::user()->role, ['A']))
+                  <td>{{ $item['created_at'] }}</td>
+                  @endif
                   <td>{{ $item['tgl_kembali'] }}</td>
                   <td>
                     <span class="badge 
@@ -86,7 +91,7 @@
               </tr>
               @empty
   <tr>
-    <td colspan="9" class="text-center">Tidak ada data Peminjaman.</td>
+    <td colspan="10" class="text-center">Tidak ada data Peminjaman.</td>
   </tr>
               @endforelse
             </tbody>

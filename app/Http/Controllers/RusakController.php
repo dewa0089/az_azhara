@@ -11,9 +11,12 @@ use App\Helpers\ActivityHelper;
 
 class RusakController extends Controller
 {
-    public function index()
+   public function index()
 {
-    $rusak = Rusak::orderBy('status', 'desc')->get();
+    $rusak = Rusak::orderBy('status', 'desc')
+                 ->orderBy('created_at', 'desc')
+                 ->get();
+
     return view("rusak.index", compact("rusak"));
 }
 
@@ -33,7 +36,7 @@ class RusakController extends Controller
         $request->validate([
             'jenis_brg_rusak' => 'required',
             'jumlah_brg_rusak' => 'required|integer|min:1',
-            'gambar_brg_rusak' => 'required|image|mimes:jpeg,png,jpg,gif',
+            'gambar_brg_rusak' => 'nullable|image|mimes:jpeg,png,jpg,gif',
             'tgl_rusak' => 'required|date',
             'keterangan' => 'nullable|string',
             'elektronik_id' => 'nullable|exists:elektroniks,id',
@@ -124,22 +127,42 @@ class RusakController extends Controller
     }
 
     public function destroy($id)
-    {
-        $rusak = Rusak::findOrFail($id);
-        $namaBarang = $rusak->nama_barang ?? 'Tidak diketahui';
+{
+    $rusak = Rusak::findOrFail($id);
+    $namaBarang = $rusak->nama_barang ?? 'Tidak diketahui';
 
-        if ($rusak->gambar_brg_rusak && file_exists(public_path('gambar/' . $rusak->gambar_brg_rusak))) {
-            unlink(public_path('gambar/' . $rusak->gambar_brg_rusak));
-        }
+    // Mengembalikan jumlah barang ke tabel inventaris sesuai jenisnya
+    $jumlahRusak = $rusak->jumlah_brg_rusak;
 
-        $rusak->delete();
-
-        // Logging aktivitas
-        ActivityHelper::log(
-            'Hapus Barang Rusak',
-            'Data barang rusak dengan ID ' . $id . ' telah dihapus.'
-        );
-
-        return redirect()->route('rusak.index')->with('success', 'Data Rusak berhasil dihapus');
+    if ($rusak->jenis_brg_rusak === 'elektronik' && $rusak->elektronik_id) {
+        $barang = Elektronik::find($rusak->elektronik_id);
+    } elseif ($rusak->jenis_brg_rusak === 'mobiler' && $rusak->mobiler_id) {
+        $barang = Mobiler::find($rusak->mobiler_id);
+    } elseif ($rusak->jenis_brg_rusak === 'lainnya' && $rusak->lainnya_id) {
+        $barang = Lainnya::find($rusak->lainnya_id);
+    } else {
+        $barang = null;
     }
+
+    if ($barang) {
+        $barang->jumlah_brg += $jumlahRusak;
+        $barang->save();
+    }
+
+    // Hapus gambar jika ada
+    if ($rusak->gambar_brg_rusak && file_exists(public_path('gambar/' . $rusak->gambar_brg_rusak))) {
+        unlink(public_path('gambar/' . $rusak->gambar_brg_rusak));
+    }
+
+    $rusak->delete();
+
+    // Logging aktivitas
+    ActivityHelper::log(
+        'Hapus Barang Rusak',
+        'Data barang rusak dengan ID ' . $id . ' telah dihapus dan jumlah barang dikembalikan.'
+    );
+
+    return redirect()->route('rusak.index')->with('success', 'Data Rusak berhasil dihapus dan jumlah barang dikembalikan');
+}
+
 }
