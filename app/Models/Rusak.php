@@ -14,17 +14,17 @@ class Rusak extends Model
 
     public function elektronik()
     {
-        return $this->belongsTo(elektronik::class, 'elektronik_id');
+        return $this->belongsTo(Elektronik::class, 'elektronik_id');
     }
 
     public function lainnya()
     {
-        return $this->belongsTo(lainnya::class, 'lainnya_id');
+        return $this->belongsTo(Lainnya::class, 'lainnya_id');
     }
 
     public function mobiler()
     {
-        return $this->belongsTo(mobiler::class, 'mobiler_id');
+        return $this->belongsTo(Mobiler::class, 'mobiler_id');
     }
 
 

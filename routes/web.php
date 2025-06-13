@@ -77,6 +77,14 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/perbaikan', [PerbaikanController::class, 'store'])->name('perbaikan.store');
         Route::get('/perbaikan/selesaikan', [PerbaikanController::class, 'selesaikanPerbaikan'])->name('perbaikan.selesaikan');
         Route::post('/perbaikan/selesaikan/store', [PerbaikanController::class, 'selesaikanPerbaikanStore'])->name('perbaikan.selesaikan.store');
+        // Perbaikan
+        Route::get('/perbaikan/mulai/{rusak_id}', [PerbaikanController::class, 'ubahStatusDalamPerbaikan'])->name('perbaikan.mulai');
+        Route::get('/perbaikan/selesaikan/{rusak_id}', [PerbaikanController::class, 'selesaikanPerbaikan'])->name('perbaikan.selesaikan');
+        Route::post('/perbaikan/selesaikan/store', [PerbaikanController::class, 'selesaikanPerbaikanStore'])->name('perbaikan.selesaikan.store');
+
+
+
+        
 
 
 

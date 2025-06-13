@@ -27,8 +27,6 @@
        value="{{ old('biaya_perbaikan') ? 'Rp. ' . number_format(old('biaya_perbaikan'), 0, ',', '.') : '' }}">
 <input type="hidden" name="biaya_perbaikan" id="biaya_perbaikan" value="{{ old('biaya_perbaikan') }}">
 
-
-
         <label for="keterangan">Keterangan</label>
         <input type="text" class="form-control" name="keterangan" value="-">
 

@@ -19,34 +19,6 @@ class PerbaikanController extends Controller
         return view('perbaikan.index', compact('perbaikan'));
     }
 
-    public function create(Request $request)
-    {
-        $rusak_id = $request->query('rusak_id');
-        $rusak = Rusak::findOrFail($rusak_id);
-
-        return view('perbaikan.create', compact('rusak'));
-    }
-
-  public function store(Request $request)
-{
-    $validated = $request->validate([
-        'rusak_id' => 'required|exists:rusaks,id',
-    ]);
-
-    $rusak = Rusak::findOrFail($request->rusak_id);
-
-    // Ubah status jadi "Dalam Perbaikan"
-    $rusak->status = 'Dalam Perbaikan';
-    $rusak->save();
-
-    ActivityHelper::log('Status Perbaikan', 'Barang rusak ID ' . $rusak->id . ' statusnya diubah menjadi Dalam Perbaikan');
-
-    return redirect()->route('rusak.index')->with('success', 'Status barang diubah menjadi Dalam Perbaikan. Silakan tekan tombol "Selesai" jika perbaikan telah selesai.');
-}
-
-
-
-
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
@@ -99,7 +71,7 @@ public function selesaikanPerbaikanStore(Request $request)
         'keterangan' => 'nullable|string'
     ]);
 
-    $rusak = Rusak::findOrFail($validated['rusak_id']);
+    $rusak = Rusak::with(['elektronik', 'mobiler', 'lainnya'])->findOrFail($validated['rusak_id']);
 
     // Simpan ke tabel perbaikan
     Perbaikan::create([
@@ -112,16 +84,44 @@ public function selesaikanPerbaikanStore(Request $request)
         'status' => 'Selesai'
     ]);
 
+    // Tambahkan stok kembali ke barang yang diperbaiki
+    $jumlah = $validated['jumlah_perbaikan'];
+    if ($rusak->elektronik) {
+        $rusak->elektronik->jumlah_brg += $jumlah;
+        $rusak->elektronik->save();
+    } elseif ($rusak->mobiler) {
+        $rusak->mobiler->jumlah_brg += $jumlah;
+        $rusak->mobiler->save();
+    } elseif ($rusak->lainnya) {
+        $rusak->lainnya->jumlah_brg += $jumlah;
+        $rusak->lainnya->save();
+    }
+
     // Update status barang rusak
     $rusak->status = 'Selesai Diperbaiki';
     $rusak->save();
 
-    ActivityHelper::log('Selesaikan Perbaikan', 'Barang rusak ID ' . $rusak->id . ' diselesaikan dan data dimasukkan ke perbaikan');
+    ActivityHelper::log('Selesaikan Perbaikan', 'Barang rusak ID ' . $rusak->id . ' diselesaikan dan stok dikembalikan');
 
-    return redirect()->route('perbaikan.index')->with('success', 'Data perbaikan berhasil disimpan.');
+    return redirect()->route('perbaikan.index')->with('success', 'Data perbaikan berhasil disimpan dan stok dikembalikan.');
 }
 
 
+public function ubahStatusDalamPerbaikan($rusak_id)
+{
+    $rusak = Rusak::findOrFail($rusak_id);
+
+    if ($rusak->status !== 'Rusak') {
+        return redirect()->back()->withErrors(['msg' => 'Barang ini tidak dapat diperbaiki karena statusnya bukan "Rusak".']);
+    }
+
+    $rusak->status = 'Dalam Perbaikan';
+    $rusak->save();
+
+    ActivityHelper::log('Perbaikan Dimulai', 'Barang rusak ID ' . $rusak->id . ' status diubah menjadi Dalam Perbaikan');
+
+    return redirect()->route('rusak.index')->with('success', 'Status diubah menjadi Dalam Perbaikan.');
+}
 
 
 }

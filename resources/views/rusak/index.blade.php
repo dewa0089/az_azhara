@@ -78,32 +78,29 @@
 @if(in_array(Auth::user()->role, ['A']))
 <td>
   <div class="d-flex justify-content-center">
-      @if ($item->status == 'Rusak')
-          <!-- Tombol Lakukan Pemusnaan -->
-          <a href="{{ route('pemusnaan.create', ['rusak_id' => $item->id]) }}" class="btn btn-warning btn-sm mx-1">
-              Lakukan Pemusnaan
-          </a>
+     @if ($item->status == 'Rusak')
+    <a href="{{ route('pemusnaan.create', ['rusak_id' => $item->id]) }}" class="btn btn-warning btn-sm mx-1">
+        Lakukan Pemusnaan
+    </a>
 
-          <!-- Tombol Lakukan Perbaikan -->
-          <a href="{{ route('perbaikan.create', ['rusak_id' => $item->id]) }}" class="btn btn-info btn-sm mx-1">
-              Lakukan Perbaikan
-          </a>
+    <a href="{{ route('perbaikan.mulai', ['rusak_id' => $item->id]) }}" class="btn btn-info btn-sm mx-1">
+        Lakukan Perbaikan
+    </a>
 
-          <!-- Tombol Delete -->
-          <form method="POST" action="{{ route('rusak.destroy', $item->id) }}">
-              @method('delete')
-              @csrf
-              <button type="submit" class="btn btn-danger btn-sm show_confirm"
-                      data-toggle="tooltip" title='Delete'
-                      data-nama='{{ $barang->nama_barang }}'>Hapus Data</button>
-          </form>
-      @endif
+    <!-- Tombol Hapus -->
+    <form method="POST" action="{{ route('rusak.destroy', $item->id) }}">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="btn btn-danger btn-sm show_confirm mx-1">Hapus Data</button>
+    </form>
+@endif
 
-     @if ($item->status == 'Dalam Perbaikan')
-    <a href="{{ route('perbaikan.selesaikan', ['rusak_id' => $item->id]) }}" class="btn btn-success btn-sm">
+@if ($item->status == 'Dalam Perbaikan')
+    <a href="{{ route('perbaikan.selesaikan', ['rusak_id' => $item->id]) }}" class="btn btn-success btn-sm mx-1">
         Selesai
     </a>
 @endif
+
 
 
   </div>

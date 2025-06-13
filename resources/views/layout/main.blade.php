@@ -94,7 +94,7 @@
         @if(in_array(Auth::user()->role, ['A']))
         <li class="nav-item">
           <a class="nav-link" href="{{ url('pemusnaan') }}">
-            <i class="mdi mdi-glassdoor menu-icon"></i>
+            <i class="mdi mdi-image-broken-variant menu-icon"></i>
             <span class="menu-title">Pemusnahan Barang</span>
           </a>
         </li>

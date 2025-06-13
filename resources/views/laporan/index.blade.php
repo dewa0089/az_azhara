@@ -13,14 +13,14 @@
             <label for="laporan">Pilih Jenis Laporan</label>
             <select class="form-control" id="laporan" name="laporan" required>
               <option value="" disabled selected>-- Pilih Laporan --</option>
-              <option value="/laporan/elektronik">Laporan Inventaris Barang Besar Elektronik</option>
-              <option value="/laporan/mobiler">Laporan Inventaris Barang Besar Mobiler</option>
-              <option value="/laporan/lainnya">Laporan Inventaris Barang Besar Lainnya</option>
-              <option value="/laporan/barangKecil">Laporan Inventaris Barang Kecil</option>
-              <option value="/laporan/peminjaman">Laporan Inventaris Peminjaman Barang</option>
-              <option value="/laporan/pengembalian">Laporan Inventaris Pengembalian Barang</option>
-              <option value="/laporan/rusak">Laporan Inventaris Barang Rusak</option>
-              <option value="/laporan/pemusnaan">Laporan Inventaris Pemusnaan Barang</option>
+              <option value="/laporan/elektronik">Laporan Inventaris Barang Induk Elektronik</option>
+              <option value="/laporan/mobiler">Laporan Inventaris Barang Induk Mobiler</option>
+              <option value="/laporan/lainnya">Laporan Inventaris Barang Induk Lainnya</option>
+              <option value="/laporan/barangKecil">Laporan Inventaris Barang Pendukung</option>
+              <option value="/laporan/peminjaman">Laporan Inventaris Peminjaman Barang Pendukung</option>
+              <option value="/laporan/pengembalian">Laporan Inventaris Pengembalian Barang Pendukung</option>
+              <option value="/laporan/rusak">Laporan Inventaris Barang Induk Rusak</option>
+              <option value="/laporan/pemusnaan">Laporan Inventaris Pemusnahan Barang Induk</option>
             </select>
           </div>
 

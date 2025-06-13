@@ -113,7 +113,10 @@ public function cetakBarangKecil(Request $request)
 public function cetakPeminjaman(Request $request)
 {
     $peminjaman = $this->applyFilter(Peminjaman::query(), $request)
-                       ->orderBy('created_at', 'desc')->get();
+        ->join('users', 'peminjamans.user_id', '=', 'users.id')
+        ->orderBy('users.name', 'asc')
+        ->select('peminjamans.*')
+        ->get();
 
     ActivityHelper::log('Cetak Laporan', 'Laporan Peminjaman Inventaris Barang Kecil berhasil dicetak');
 
@@ -126,10 +129,14 @@ public function cetakPeminjaman(Request $request)
     return view('laporan.peminjaman', compact('peminjaman'));
 }
 
+
 public function cetakPengembalian(Request $request)
 {
     $pengembalian = $this->applyFilter(Pengembalian::query(), $request)
-                         ->orderBy('created_at', 'desc')->get();
+        ->join('users', 'pengembalians.user_id', '=', 'users.id')
+        ->orderBy('users.name', 'asc')
+        ->select('pengembalians.*')
+        ->get();
 
     ActivityHelper::log('Cetak Laporan', 'Laporan Pengembalian Inventaris Barang Kecil berhasil dicetak');
 
@@ -141,6 +148,7 @@ public function cetakPengembalian(Request $request)
 
     return view('laporan.pengembalian', compact('pengembalian'));
 }
+
 
 public function cetakPemusnaan(Request $request)
 {

@@ -15,6 +15,6 @@ class Perbaikan extends Model
 
     public function rusak()
     {
-        return $this->belongsTo(rusak::class, 'rusak_id');
+        return $this->belongsTo(Rusak::class, 'rusak_id');
     }
 }
