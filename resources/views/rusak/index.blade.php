@@ -83,9 +83,10 @@
         Lakukan Pemusnaan
     </a>
 
-    <a href="{{ route('perbaikan.mulai', ['rusak_id' => $item->id]) }}" class="btn btn-info btn-sm mx-1">
-        Lakukan Perbaikan
-    </a>
+    <a href="{{ route('perbaikan.mulai', ['rusak_id' => $item->id]) }}" 
+   class="btn btn-info btn-sm mx-1 btn-perbaikan">
+    Lakukan Perbaikan
+</a>
 
     <!-- Tombol Hapus -->
     <form method="POST" action="{{ route('rusak.destroy', $item->id) }}">
@@ -96,9 +97,10 @@
 @endif
 
 @if ($item->status == 'Dalam Perbaikan')
-    <a href="{{ route('perbaikan.selesaikan', ['rusak_id' => $item->id]) }}" class="btn btn-success btn-sm mx-1">
-        Selesai
-    </a>
+    <a href="{{ route('perbaikan.selesaikan', ['rusak_id' => $item->id]) }}" 
+   class="btn btn-success btn-sm mx-1 btn-selesai-perbaikan">
+    Selesai
+</a>
 @endif
 
 
@@ -128,26 +130,43 @@
 @section('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
 <script>
-  // Untuk tombol "Selesai"
-  document.querySelectorAll('.btn-selesai').forEach(button => {
+   // Konfirmasi untuk tombol "Lakukan Perbaikan"
+  document.querySelectorAll('.btn-perbaikan').forEach(button => {
     button.addEventListener('click', function(e) {
       e.preventDefault();
-      const form = this.closest('form');
-
+      const href = this.getAttribute('href');
       swal({
-        title: "Apakah perbaikan benar-benar selesai?",
-        text: "Barang akan dinyatakan selesai diperbaiki.",
-        icon: "warning",
-        buttons: ["Batal", "Ya, Selesaikan!"],
-        dangerMode: true,
-      }).then((willSubmit) => {
-        if (willSubmit) {
-          form.submit();
+        title: "Mulai Perbaikan?",
+        text: "Status barang akan berubah menjadi 'Dalam Perbaikan'.",
+        icon: "info",
+        buttons: ["Batal", "Ya, Lanjutkan!"],
+        dangerMode: false,
+      }).then((willGo) => {
+        if (willGo) {
+          window.location.href = href;
         }
       });
     });
   });
 
+  // Konfirmasi untuk tombol "Selesai Perbaikan"
+  document.querySelectorAll('.btn-selesai-perbaikan').forEach(button => {
+    button.addEventListener('click', function(e) {
+      e.preventDefault();
+      const href = this.getAttribute('href');
+      swal({
+        title: "Selesaikan Perbaikan?",
+        text: "Barang akan dinyatakan selesai diperbaiki.",
+        icon: "success",
+        buttons: ["Batal", "Ya, Selesaikan!"],
+        dangerMode: false,
+      }).then((willGo) => {
+        if (willGo) {
+          window.location.href = href;
+        }
+      });
+    });
+  });
   @if (Session::get('success'))
     toastr.success("{{ Session::get('success') }}");
   @endif
