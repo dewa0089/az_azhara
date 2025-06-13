@@ -56,17 +56,31 @@
         </div>
     </div>
 </div>
+@endsection
 
-{{-- JavaScript untuk auto-fill kode_barang --}}
+@section('scripts')
+{{-- CDN jQuery dan toastr --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+
+{{-- JS Toastr --}}
 <script>
-    document.getElementById('barang_id').addEventListener('change', function () {
-        const selectedOption = this.options[this.selectedIndex];
-        const kode = selectedOption.getAttribute('data-kode');
-        document.getElementById('kode_barang').value = kode || '';
+    $(document).ready(function() {
+        @if (Session::get('success'))
+            toastr.success("{{ Session::get('success') }}");
+        @endif
+
+        @if ($errors->has('stok'))
+            toastr.error("{{ $errors->first('stok') }}");
+        @endif
+    });
+
+    // Auto isi kode barang
+    $('#barang_id').on('change', function () {
+        const selected = $(this).find('option:selected');
+        const kode = selected.data('kode');
+        $('#kode_barang').val(kode || '');
     });
 </script>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-
 @endsection

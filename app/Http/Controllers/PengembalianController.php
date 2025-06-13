@@ -6,33 +6,44 @@ use App\Models\Pengembalian;
 use App\Models\Peminjaman;
 use Illuminate\Http\Request;
 use App\Helpers\ActivityHelper;
+use App\Models\User;
 
 class PengembalianController extends Controller
 {
-    public function index()
+   public function index(Request $request)
 {
     $user = auth()->user();
-
     $statusOrder = ['Menunggu Persetujuan', 'Belum Dikembalikan', 'Disetujui'];
 
-    if (in_array($user->role, ['A', 'K', 'W'])) {
-        // Untuk admin, kepala sekolah, wakil kepala sekolah
-        $pengembalian = Pengembalian::with(['peminjaman.barang'])
-            ->orderByRaw("FIELD(status, '" . implode("','", $statusOrder) . "')")
-            ->orderBy('created_at', 'desc')
-            ->get();
-    } else {
-        // Untuk user biasa
-        $pengembalian = Pengembalian::whereHas('peminjaman', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            })
-            ->with(['peminjaman.barang'])
-            ->orderByRaw("FIELD(status, '" . implode("','", $statusOrder) . "')")
-            ->orderBy('created_at', 'desc')
-            ->get();
-    }
+    $query = Pengembalian::with(['peminjaman.barang']);
 
-    return view('pengembalian.index', compact('pengembalian'));
+    if (in_array($user->role, ['A', 'K', 'W'])) {
+        // Filter nama_peminjam jika dikirim
+        if ($request->filled('nama_peminjam')) {
+            $query->whereHas('peminjaman', function ($q) use ($request) {
+                $q->where('nama_peminjam', $request->nama_peminjam);
+            });
+        }
+
+        $pengembalian = $query
+            ->orderByRaw("FIELD(status, '" . implode("','", $statusOrder) . "')")
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Ambil user dengan role 'U' untuk dropdown
+        $users = User::where('role', 'U')->orderBy('name')->get();
+
+        return view('pengembalian.index', compact('pengembalian', 'users'));
+    } else {
+        $pengembalian = $query->whereHas('peminjaman', function ($q) use ($user) {
+                $q->where('user_id', $user->id);
+            })
+            ->orderByRaw("FIELD(status, '" . implode("','", $statusOrder) . "')")
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('pengembalian.index', compact('pengembalian'));
+    }
 }
 
     public function edit($id)

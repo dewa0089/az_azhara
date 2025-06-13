@@ -11,14 +11,15 @@ use App\Helpers\ActivityHelper;
 
 class RusakController extends Controller
 {
-   public function index()
+public function index()
 {
-    $rusak = Rusak::orderBy('status', 'desc')
+    $rusak = Rusak::orderByRaw("FIELD(status, 'Rusak', 'Dalam Perbaikan', 'Selesai Diperbaiki', 'Berhasil Dimusnahkan')")
                  ->orderBy('created_at', 'desc')
                  ->get();
 
     return view("rusak.index", compact("rusak"));
 }
+
 
 
     public function create()

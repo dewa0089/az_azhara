@@ -13,7 +13,8 @@ use App\Http\Controllers\{
     DashboardController,
     ElektronikController,
     MobilerController,
-    LainnyaController
+    LainnyaController,
+    PerbaikanController
 };
 use App\Http\Controllers\Auth\ResetPasswordController;
 
@@ -43,6 +44,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/laporan/pengembalian', [LaporanController::class, 'cetakPengembalian']);
         Route::get('/laporan/pemusnaan', [LaporanController::class, 'cetakPemusnaan']);
         Route::get('/laporan/rusak', [LaporanController::class, 'cetakBarangRusak']);
+
+
         
     });
 
@@ -60,6 +63,7 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('user', UserController::class);
         Route::resource('rusak', RusakController::class);
         Route::resource('pemusnaan', PemusnaanController::class);
+        Route::resource('perbaikan', PerbaikanController::class);
         Route::patch('/peminjaman/{id}/setujui', [PeminjamanController::class, 'setujui'])->name('peminjaman.setujui');
         Route::patch('/peminjaman/{id}/tolak', [PeminjamanController::class, 'tolak'])->name('peminjaman.tolak');
         Route::put('/pengembalian/setujui/{id}', [PengembalianController::class, 'setujui'])->name('pengembalian.setujui');
@@ -67,6 +71,18 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/pemusnaan/{id}/laksanakan', [PemusnaanController::class, 'laksanakan'])->name('pemusnaan.laksanakan');
         Route::get('/pemusnaan/create', [PemusnaanController::class, 'create'])->name('pemusnaan.create');
         Route::post('/pemusnaan/store', [PemusnaanController::class, 'store'])->name('pemusnaan.store');
+
+        Route::get('/perbaikan', [PerbaikanController::class, 'index'])->name('perbaikan.index');
+        Route::get('/perbaikan/create', [PerbaikanController::class, 'create'])->name('perbaikan.create');
+        Route::post('/perbaikan', [PerbaikanController::class, 'store'])->name('perbaikan.store');
+        Route::get('/perbaikan/selesaikan', [PerbaikanController::class, 'selesaikanPerbaikan'])->name('perbaikan.selesaikan');
+        Route::post('/perbaikan/selesaikan/store', [PerbaikanController::class, 'selesaikanPerbaikanStore'])->name('perbaikan.selesaikan.store');
+
+
+
+
+
+        
     });
 
     Route::middleware('checkRole:A,U,K,W')->group(function () {

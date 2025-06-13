@@ -43,87 +43,136 @@ class LaporanController extends Controller
     }
 
     public function cetakElektronik(Request $request)
-    {
-        $query = Elektronik::query();
-        $elektronikCetak = $this->applyFilter($query, $request)->orderBy('created_at', 'desc')->get();
-        $totalHarga = $elektronikCetak->sum('total_harga');
+{
+    $elektronik = $this->applyFilter(Elektronik::query(), $request)
+                       ->orderBy('created_at', 'desc')->get();
+    $totalHarga = $elektronik->sum('total_harga');
 
-        ActivityHelper::log('Cetak Laporan', 'Laporan Inventaris Barang Besar Elektronik berhasil dicetak');
+    if ($request->format === 'word') {
+        return response()->view('laporan.elektronik', compact('elektronik', 'totalHarga'))
+            ->header('Content-Type', 'application/msword')
+            ->header('Content-Disposition', 'attachment; filename="Laporan_Elektronik.doc"');
+    }
+    
 
-        return view("laporan.elektronik", compact('elektronikCetak', 'totalHarga'))->with('elektronik', $elektronikCetak);
+    return view('laporan.elektronik', compact('elektronik', 'totalHarga'));
+}
+
+
+   public function cetakMobiler(Request $request)
+{
+    $mobiler = $this->applyFilter(Mobiler::query(), $request)
+                    ->orderBy('created_at', 'desc')->get();
+    $totalHarga = $mobiler->sum('total_harga');
+
+    ActivityHelper::log('Cetak Laporan', 'Laporan Inventaris Barang Mobiler berhasil dicetak');
+
+    if ($request->format === 'word') {
+        return response()->view('laporan.mobiler', compact('mobiler', 'totalHarga'))
+            ->header('Content-Type', 'application/msword')
+            ->header('Content-Disposition', 'attachment; filename="Laporan_Mobiler.doc"');
     }
 
-    public function cetakMobiler(Request $request)
-    {
-        $query = Mobiler::query();
-        $mobilerCetak = $this->applyFilter($query, $request)->orderBy('created_at', 'desc')->get();
-        $totalHarga = $mobilerCetak->sum('total_harga');
+    return view('laporan.mobiler', compact('mobiler', 'totalHarga'));
+}
 
-        ActivityHelper::log('Cetak Laporan', 'Laporan Inventaris Barang Mobiler berhasil dicetak');
+public function cetakLainnya(Request $request)
+{
+    $lainnya = $this->applyFilter(Lainnya::query(), $request)
+                    ->orderBy('created_at', 'desc')->get();
+    $totalHarga = $lainnya->sum('total_harga');
 
-        return view("laporan.mobiler", compact('mobilerCetak', 'totalHarga'))->with('mobiler', $mobilerCetak);
+    ActivityHelper::log('Cetak Laporan', 'Laporan Inventaris Barang Lainnya berhasil dicetak');
+
+    if ($request->format === 'word') {
+        return response()->view('laporan.lainnya', compact('lainnya', 'totalHarga'))
+            ->header('Content-Type', 'application/msword')
+            ->header('Content-Disposition', 'attachment; filename="Laporan_Lainnya.doc"');
     }
 
-    public function cetakLainnya(Request $request)
-    {
-        $query = Lainnya::query();
-        $lainnyaCetak = $this->applyFilter($query, $request)->orderBy('created_at', 'desc')->get();
-        $totalHarga = $lainnyaCetak->sum('total_harga');
+    return view('laporan.lainnya', compact('lainnya', 'totalHarga'));
+}
 
-        ActivityHelper::log('Cetak Laporan', 'Laporan Inventaris Barang Lainnya berhasil dicetak');
+public function cetakBarangKecil(Request $request)
+{
+    $barang = $this->applyFilter(Barang::query(), $request)
+                   ->orderBy('created_at', 'desc')->get();
+    $totalHarga = $barang->sum('total_harga');
 
-        return view("laporan.lainnya", compact('lainnyaCetak', 'totalHarga'))->with('lainnya', $lainnyaCetak);
+    ActivityHelper::log('Cetak Laporan', 'Laporan Inventaris Barang Kecil berhasil dicetak');
+
+    if ($request->format === 'word') {
+        return response()->view('laporan.barangKecil', compact('barang', 'totalHarga'))
+            ->header('Content-Type', 'application/msword')
+            ->header('Content-Disposition', 'attachment; filename="Laporan_BarangKecil.doc"');
     }
 
-    public function cetakBarangKecil(Request $request)
-    {
-        $query = Barang::query();
-        $barangCetak = $this->applyFilter($query, $request)->orderBy('created_at', 'desc')->get();
-        $totalHarga = $barangCetak->sum('total_harga');
+    return view('laporan.barangKecil', compact('barang', 'totalHarga'));
+}
 
-        ActivityHelper::log('Cetak Laporan', 'Laporan Inventaris Barang Kecil berhasil dicetak');
+public function cetakPeminjaman(Request $request)
+{
+    $peminjaman = $this->applyFilter(Peminjaman::query(), $request)
+                       ->orderBy('created_at', 'desc')->get();
 
-        return view("laporan.barangKecil", compact('barangCetak', 'totalHarga'))->with('barang', $barangCetak);
+    ActivityHelper::log('Cetak Laporan', 'Laporan Peminjaman Inventaris Barang Kecil berhasil dicetak');
+
+    if ($request->format === 'word') {
+        return response()->view('laporan.peminjaman', compact('peminjaman'))
+            ->header('Content-Type', 'application/msword')
+            ->header('Content-Disposition', 'attachment; filename="Laporan_Peminjaman.doc"');
     }
 
-    public function cetakPeminjaman(Request $request)
-    {
-        $query = Peminjaman::query();
-        $peminjamanCetak = $this->applyFilter($query, $request)->orderBy('created_at', 'desc')->get();
+    return view('laporan.peminjaman', compact('peminjaman'));
+}
 
-        ActivityHelper::log('Cetak Laporan', 'Laporan Peminjaman Inventaris Barang Kecil berhasil dicetak');
+public function cetakPengembalian(Request $request)
+{
+    $pengembalian = $this->applyFilter(Pengembalian::query(), $request)
+                         ->orderBy('created_at', 'desc')->get();
 
-        return view("laporan.peminjaman", compact('peminjamanCetak'))->with('peminjaman', $peminjamanCetak);
+    ActivityHelper::log('Cetak Laporan', 'Laporan Pengembalian Inventaris Barang Kecil berhasil dicetak');
+
+    if ($request->format === 'word') {
+        return response()->view('laporan.pengembalian', compact('pengembalian'))
+            ->header('Content-Type', 'application/msword')
+            ->header('Content-Disposition', 'attachment; filename="Laporan_Pengembalian.doc"');
     }
 
-    public function cetakPengembalian(Request $request)
-    {
-        $query = Pengembalian::query();
-        $pengembalianCetak = $this->applyFilter($query, $request)->orderBy('created_at', 'desc')->get();
+    return view('laporan.pengembalian', compact('pengembalian'));
+}
 
-        ActivityHelper::log('Cetak Laporan', 'Laporan Pengembalian Inventaris Barang Kecil berhasil dicetak');
+public function cetakPemusnaan(Request $request)
+{
+    $pemusnaan = $this->applyFilter(Pemusnaan::query(), $request)
+                      ->orderBy('created_at', 'desc')->get();
+    $totalHarga = $pemusnaan->sum('total_harga');
 
-        return view("laporan.pengembalian", compact('pengembalianCetak'))->with('pengembalian', $pengembalianCetak);
+    ActivityHelper::log('Cetak Laporan', 'Laporan Pemusnaan Inventaris Barang Besar berhasil dicetak');
+
+    if ($request->format === 'word') {
+        return response()->view('laporan.pemusnaan', compact('pemusnaan', 'totalHarga'))
+            ->header('Content-Type', 'application/msword')
+            ->header('Content-Disposition', 'attachment; filename="Laporan_Pemusnaan.doc"');
     }
 
-    public function cetakPemusnaan(Request $request)
-    {
-        $query = Pemusnaan::query();
-        $pemusnaanCetak = $this->applyFilter($query, $request)->orderBy('created_at', 'desc')->get();
-        $totalHarga = $pemusnaanCetak->sum('total_harga');
+    return view('laporan.pemusnaan', compact('pemusnaan', 'totalHarga'));
+}
 
-        ActivityHelper::log('Cetak Laporan', 'Laporan Pemusnaan Inventaris Barang Besar berhasil dicetak');
+public function cetakBarangRusak(Request $request)
+{
+    $rusak = $this->applyFilter(Rusak::query(), $request)
+                  ->orderBy('created_at', 'desc')->get();
 
-        return view("laporan.pemusnaan", compact('pemusnaanCetak', 'totalHarga'))->with('pemusnaan', $pemusnaanCetak);
+    ActivityHelper::log('Cetak Laporan', 'Laporan Inventaris Barang Besar Rusak berhasil dicetak');
+
+    if ($request->format === 'word') {
+        return response()->view('laporan.rusak', compact('rusak'))
+            ->header('Content-Type', 'application/msword')
+            ->header('Content-Disposition', 'attachment; filename="Laporan_BarangRusak.doc"');
     }
 
-    public function cetakBarangRusak(Request $request)
-    {
-        $query = Rusak::query();
-        $barangRusakCetak = $this->applyFilter($query, $request)->orderBy('created_at', 'desc')->get();
+    return view('laporan.rusak', compact('rusak'));
+}
 
-        ActivityHelper::log('Cetak Laporan', 'Laporan Inventaris Barang Besar Rusak berhasil dicetak');
-
-        return view("laporan.rusak", compact('barangRusakCetak'))->with('rusak', $barangRusakCetak);
-    }
 }

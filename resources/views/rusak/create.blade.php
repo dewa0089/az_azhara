@@ -90,9 +90,21 @@
 
           {{-- Auto-filled Fields --}}
           <div class="form-group">
-            <label for="kode_barang">Kode Barang</label>
-            <input type="text" id="kode_barang" class="form-control" readonly>
-          </div>
+  <label for="kode_barang">Kode Barang</label>
+  <select name="kode_barang" id="kode_barang" class="form-control">
+    <option selected disabled>Pilih Kode Barang</option>
+    @foreach($elektronik as $item)
+      <option value="{{ $item->kode_barang }}">{{ $item->kode_barang }} - {{ $item->nama_barang }}</option>
+    @endforeach
+    @foreach($mobiler as $item)
+      <option value="{{ $item->kode_barang }}">{{ $item->kode_barang }} - {{ $item->nama_barang }}</option>
+    @endforeach
+    @foreach($lainnya as $item)
+      <option value="{{ $item->kode_barang }}">{{ $item->kode_barang }} - {{ $item->nama_barang }}</option>
+    @endforeach
+  </select>
+</div>
+
 
           <div class="form-group">
             <label for="merk">Merk</label>

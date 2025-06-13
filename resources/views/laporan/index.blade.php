@@ -33,6 +33,15 @@
             </select>
           </div>
 
+          <div class="form-group mt-3">
+  <label for="format">Pilih Format</label>
+  <select class="form-control" id="format" name="format" required>
+    <option value="pdf" selected>PDF</option>
+    <option value="word">Word</option>
+  </select>
+</div>
+
+
           <div class="text-center mt-4">
             <button type="submit" class="btn btn-primary">Cetak</button>
           </div>
@@ -47,19 +56,21 @@
 @section('scripts')
 <script>
   document.getElementById('laporanForm').addEventListener('submit', function (e) {
-    e.preventDefault();
+  e.preventDefault();
 
-    const laporan = document.getElementById('laporan').value;
-    const filter = document.getElementById('filter').value;
+  const laporan = document.getElementById('laporan').value;
+  const filter = document.getElementById('filter').value;
+  const format = document.getElementById('format').value;
 
-    if (!laporan) {
-      toastr.error("Silakan pilih jenis laporan terlebih dahulu.");
-      return;
-    }
+  if (!laporan) {
+    toastr.error("Silakan pilih jenis laporan terlebih dahulu.");
+    return;
+  }
 
-    const url = `${laporan}?filter=${filter}`;
-    window.open(url, '_blank');
-  });
+  const url = `${laporan}?filter=${filter}&format=${format}`;
+  window.open(url, '_blank');
+});
+
 
   @if (Session::get('success'))
     toastr.success("{{ Session::get('success') }}")

@@ -10,29 +10,36 @@ use App\Models\Peminjaman;
 use App\Models\Pengembalian;
 use App\Models\Barang;
 use App\Helpers\ActivityHelper;
+use App\Models\User;
 
 class PeminjamanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
 {
     $user = Auth::user();
 
-    if (in_array($user->role, ['A', 'K', 'W'])) {
-        // Untuk Admin, Kepala Sekolah, dan Wakil Kepala Sekolah
-        $peminjaman = Peminjaman::with('barang')
-            ->orderByRaw("CASE WHEN status = 'Menunggu Persetujuan' THEN 0 ELSE 1 END")
-            ->orderBy('created_at', 'desc')
-            ->get();
-    } else {
-        // Untuk User biasa, hanya data miliknya
-        $peminjaman = Peminjaman::with('barang')
-            ->where('user_id', $user->id)
-            ->orderByRaw("CASE WHEN status = 'Menunggu Persetujuan' THEN 0 ELSE 1 END")
-            ->orderBy('created_at', 'desc')
-            ->get();
-    }
+    $query = Peminjaman::with('barang')
+        ->orderByRaw("CASE WHEN status = 'Menunggu Persetujuan' THEN 0 ELSE 1 END")
+        ->orderBy('created_at', 'desc');
 
-    return view("peminjaman.index", compact("peminjaman"));
+    if (in_array($user->role, ['A', 'K', 'W'])) {
+        // Jika admin, kepala, wakil => bisa filter berdasarkan nama peminjam
+        if ($request->filled('nama_peminjam')) {
+            $query->where('nama_peminjam', $request->nama_peminjam);
+        }
+
+        $peminjaman = $query->get();
+
+        // Ambil daftar user role U untuk dropdown filter
+        $users = User::where('role', 'U')->orderBy('name')->get();
+
+        return view('peminjaman.index', compact('peminjaman', 'users'));
+    } else {
+        // Untuk User biasa, hanya tampilkan data miliknya sendiri
+        $peminjaman = $query->where('user_id', $user->id)->get();
+
+        return view('peminjaman.index', compact('peminjaman'));
+    }
 }
 
 
@@ -44,32 +51,42 @@ class PeminjamanController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'nama_peminjam' => 'required',
-            'barang_id' => 'required|exists:barangs,id',
-            'kode_barang' => 'required',
-            'jumlah_peminjam' => 'required|integer|min:1',
-            'tgl_peminjam' => 'required|date',
-        ]);
+{
+    $request->validate([
+        'nama_peminjam' => 'required',
+        'barang_id' => 'required|exists:barangs,id',
+        'kode_barang' => 'required',
+        'jumlah_peminjam' => 'required|integer|min:1',
+        'tgl_peminjam' => 'required|date',
+    ]);
 
-        $tgl_kembali = Carbon::parse($request->tgl_peminjam)->addYear();
+    $barang = Barang::findOrFail($request->barang_id);
 
-        $peminjaman = Peminjaman::create([
-            'nama_peminjam' => $request->nama_peminjam,
-            'barang_id' => $request->barang_id,
-            'kode_barang' => $request->kode_barang,
-            'jumlah_peminjam' => $request->jumlah_peminjam,
-            'tgl_peminjam' => $request->tgl_peminjam,
-            'tgl_kembali' => $tgl_kembali->format('Y-m-d'),
-            'status' => 'Menunggu Persetujuan',
-            'user_id' => Auth::id(),
-        ]);
-
-        ActivityHelper::log('Ajukan Peminjaman', 'Peminjaman oleh ' . $peminjaman->nama_peminjam . ' untuk Inventaris Barang Kecil dengan nama ' . $peminjaman->barang->nama_barang . ' telah diajukan.');
-
-        return redirect()->route('peminjaman.index')->with('success', 'Peminjaman berhasil diajukan!');
+    // Validasi stok
+    if ($request->jumlah_peminjam > $barang->jumlah_barang) {
+        return redirect()->back()
+            ->withInput()
+            ->withErrors(['stok' => 'Jumlah peminjaman melebihi stok yang tersedia (' . $barang->jumlah_barang . ').']);
     }
+
+    $tgl_kembali = Carbon::parse($request->tgl_peminjam)->addYear();
+
+    $peminjaman = Peminjaman::create([
+        'nama_peminjam' => $request->nama_peminjam,
+        'barang_id' => $request->barang_id,
+        'kode_barang' => $request->kode_barang,
+        'jumlah_peminjam' => $request->jumlah_peminjam,
+        'tgl_peminjam' => $request->tgl_peminjam,
+        'tgl_kembali' => $tgl_kembali->format('Y-m-d'),
+        'status' => 'Menunggu Persetujuan',
+        'user_id' => Auth::id(),
+    ]);
+
+    ActivityHelper::log('Ajukan Peminjaman', 'Peminjaman oleh ' . $peminjaman->nama_peminjam . ' untuk Inventaris Barang Kecil dengan nama ' . $peminjaman->barang->nama_barang . ' telah diajukan.');
+
+    return redirect()->route('peminjaman.index')->with('success', 'Peminjaman berhasil diajukan!');
+}
+
 
     public function update(Request $request, $id)
     {

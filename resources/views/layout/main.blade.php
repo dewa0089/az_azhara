@@ -37,7 +37,7 @@
         <li class="nav-item">
           <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
             <i class="mdi mdi-palette menu-icon"></i>
-            <span class="menu-title">Inventaris Barang Besar</span>
+            <span class="menu-title">Barang Induk</span>
             <i class="menu-arrow"></i>
           </a>
           <div class="collapse" id="ui-basic">
@@ -53,7 +53,7 @@
         <li class="nav-item">
           <a class="nav-link" href="{{ url('barang') }}">
             <i class="mdi mdi-cube menu-icon"></i>
-            <span class="menu-title">Inventaris Barang Kecil</span>
+            <span class="menu-title">Barang Pendukung</span>
           </a>
         </li>
         @endif
@@ -81,11 +81,21 @@
           </a>
         </li>
         @endif
+
+        @if(in_array(Auth::user()->role, ['A']))
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url('perbaikan') }}">
+            <i class="mdi mdi-glassdoor menu-icon"></i>
+            <span class="menu-title">Perbaikan Barang</span>
+          </a>
+        </li>
+        @endif
+
         @if(in_array(Auth::user()->role, ['A']))
         <li class="nav-item">
           <a class="nav-link" href="{{ url('pemusnaan') }}">
             <i class="mdi mdi-glassdoor menu-icon"></i>
-            <span class="menu-title">Pemusnaan Barang</span>
+            <span class="menu-title">Pemusnahan Barang</span>
           </a>
         </li>
         @endif

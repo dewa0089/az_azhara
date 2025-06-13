@@ -6,11 +6,34 @@
   <div class="col-lg-12 grid-margin stretch-card">
     <div class="card">
       <div class="card-body">
-        <div class="row mb-1">
+
+        <div class="row mb-3">
           <div class="col">
             <h4 class="card-title">Pengembalian Barang</h4>
           </div>
-        </div>         
+        </div>
+
+        {{-- Form Filter Nama Peminjam --}}
+        @if(isset($users) && in_array(Auth::user()->role, ['A', 'K', 'W']))
+        <form method="GET" action="{{ route('pengembalian.index') }}" class="mb-4">
+          <div class="row">
+            <div class="col-md-4">
+              <select name="nama_peminjam" class="form-control">
+                <option value="">-- Pilih Nama Peminjam --</option>
+                @foreach($users as $u)
+                <option value="{{ $u->name }}" {{ request('nama_peminjam') == $u->name ? 'selected' : '' }}>
+                  {{ $u->name }}
+                </option>
+                @endforeach
+              </select>
+            </div>
+            <div class="col-md-2">
+              <button type="submit" class="btn btn-primary">Filter</button>
+            </div>
+          </div>
+        </form>
+        @endif
+
         <div class="table-responsive">
           <table class="table table-striped">
             <thead>
@@ -26,7 +49,7 @@
                 <th>Jumlah Barang Hilang</th>
                 <th>Tanggal Pengembalian</th>
                 @if(in_array(Auth::user()->role, ['A']))
-                <th>Tanggal & Jam Input Pengembalian</th>
+                <th>Tanggal & Jam Input</th>
                 @endif
                 <th>Keterangan</th>
                 <th>Status</th>
@@ -36,7 +59,7 @@
             <tbody>
               @forelse ($pengembalian as $item)
               <tr>
-                <td>{{ $loop->iteration }}</td>                
+                <td>{{ $loop->iteration }}</td>
                 <td>{{ $item->peminjaman->nama_peminjam }}</td>
                 <td>{{ $item->peminjaman->barang->kode_barang }}</td>
                 <td>{{ $item->peminjaman->barang->nama_barang }}</td>
@@ -47,7 +70,7 @@
                 <td>{{ $item->jumlah_brg_hilang ?? '-' }}</td>
                 <td>{{ $item->tgl_pengembalian ?? '-' }}</td>
                 @if(in_array(Auth::user()->role, ['A']))
-                <td>{{ $item['created_at'] }}</td>
+                <td>{{ $item->created_at }}</td>
                 @endif
                 <td>{{ $item->keterangan ?? '-' }}</td>
                 <td>
@@ -68,7 +91,7 @@
                         @endif
                       </a>
                     @elseif ($item->status == 'Menunggu Persetujuan')
-                    @if(in_array(Auth::user()->role, ['A']))
+                      @if(in_array(Auth::user()->role, ['A']))
                       <form id="form-setujui-{{ $item->id }}" action="{{ route('pengembalian.setujui', $item->id) }}" method="POST" style="display:inline;">
                         @csrf
                         @method('PUT')
@@ -76,7 +99,7 @@
                           Setujui
                         </button>
                       </form>
-                    @endif
+                      @endif
                     @else
                       <span class="text-muted">Tidak ada aksi</span>
                     @endif

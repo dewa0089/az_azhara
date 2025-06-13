@@ -13,14 +13,17 @@
       background-color: #fff;
     }
     .report-title {
-      text-align: center;
-      font-size: 24px;
-      font-weight: 700;
-      margin-bottom: 30px;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      color: #333;
-    }
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0.5px 0;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #333;
+  }
+.report-title:last-of-type {
+  margin-bottom: 30px;
+}
     table.static {
       width: 100%;
       border-collapse: collapse;
@@ -53,7 +56,7 @@
     /* Responsive & print-friendly */
     @media print {
       body {
-        margin: 10mm 15mm 10mm 15mm;
+        margin: 10mm 10mm 20mm 5mm; 
         color-adjust: exact;
         -webkit-print-color-adjust: exact;
       }
@@ -71,7 +74,9 @@
 </head>
 <body>
   <div class="form-group">
-    <p class="report-title">Laporan Barang Inventaris Pengembalian</p>
+    <p class="report-title">LAPORAN PENGEMBALIAN BARANG INVENTARIS HABIS PAKAI</p>
+    <p class="report-title">PENGEMBALIAN BARANG-BARANG PENDUKUNG</p>
+    <p class="report-title">TAHUN PELAJARAN .....</p>
     <table class="static" rules="all" border="1" >
       <thead>
         <tr>
@@ -121,6 +126,27 @@
         @endforelse
       </tbody>
     </table>
+<div style="width: 100%; margin-top: 50px;">
+  <table style="width: 100%; font-size: 14px; border: none;">
+    <tr>
+      <td style="width: 50%; text-align: left;">
+        <p>Mengetahui,</p>
+        <p style="white-space: nowrap;">Kepala Sekolah SMA Islam Az-Zahra Palembang</p>
+        <br><br><br><br>
+        <p><u>____________________</u></p>
+        <p>NIY: _________________</p>
+      </td>
+      <td style="width: 50%; text-align: right;">
+        <p style="white-space: nowrap;">Palembang, ________________ 20__</p>
+        <p>Waka Kurikulum dan Sapras</p>
+        <br><br><br><br>
+        <p><u>____________________</u></p>
+        <p>NIY: _________________</p>
+      </td>
+    </tr>
+  </table>
+</div>
+
   </div>
 
 <script>

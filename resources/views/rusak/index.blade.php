@@ -83,6 +83,12 @@
           <a href="{{ route('pemusnaan.create', ['rusak_id' => $item->id]) }}" class="btn btn-warning btn-sm mx-1">
               Lakukan Pemusnaan
           </a>
+
+          <!-- Tombol Lakukan Perbaikan -->
+          <a href="{{ route('perbaikan.create', ['rusak_id' => $item->id]) }}" class="btn btn-info btn-sm mx-1">
+              Lakukan Perbaikan
+          </a>
+
           <!-- Tombol Delete -->
           <form method="POST" action="{{ route('rusak.destroy', $item->id) }}">
               @method('delete')
@@ -92,8 +98,17 @@
                       data-nama='{{ $barang->nama_barang }}'>Hapus Data</button>
           </form>
       @endif
+
+     @if ($item->status == 'Dalam Perbaikan')
+    <a href="{{ route('perbaikan.selesaikan', ['rusak_id' => $item->id]) }}" class="btn btn-success btn-sm">
+        Selesai
+    </a>
+@endif
+
+
   </div>
 </td>
+
 
 @endif
 
@@ -114,9 +129,31 @@
 @endsection
 
 @section('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
 <script>
-    @if (Session::get('success'))
-        toastr.success("{{ Session::get('success') }}")
-    @endif
+  // Untuk tombol "Selesai"
+  document.querySelectorAll('.btn-selesai').forEach(button => {
+    button.addEventListener('click', function(e) {
+      e.preventDefault();
+      const form = this.closest('form');
+
+      swal({
+        title: "Apakah perbaikan benar-benar selesai?",
+        text: "Barang akan dinyatakan selesai diperbaiki.",
+        icon: "warning",
+        buttons: ["Batal", "Ya, Selesaikan!"],
+        dangerMode: true,
+      }).then((willSubmit) => {
+        if (willSubmit) {
+          form.submit();
+        }
+      });
+    });
+  });
+
+  @if (Session::get('success'))
+    toastr.success("{{ Session::get('success') }}");
+  @endif
 </script>
 @endsection
+
